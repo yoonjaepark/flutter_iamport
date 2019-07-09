@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_iamport/flutter_iamport.dart';
 import 'package:flutter_iamport_example/utils/constants.dart';
+import 'package:flutter_iamport_example/utils/util.dart';
 import 'package:flutter_iamport_example/widgets/payMethodPicker.dart';
 import 'package:flutter_iamport_example/widgets/pgPicker.dart';
 
@@ -15,35 +16,36 @@ class PaymentTest extends StatefulWidget {
 class _PaymentTestState extends State<PaymentTest> {
   int _pgIndex = 0;
   int _pgMethodIndex = 0;
+  int _quotasIndex = 0;
   bool pgPicker = false, payMethodPicker = false;
-  // String pg = 'html5_inicis',
-  //     pay_method = 'card',
-  //     name = '아임포트 결제데이터 분석',
-  //     merchant_uid = "mid_${DateTime.now().millisecondsSinceEpoch}",
-  //     amount = '39000',
-  //     buyer_name = '홍길동',
-  //     buyer_tel = '01012345678',
-  //     buyer_email = 'example@naver.com',
-  //     buyer_addr = '서울시 강남구 신사동 661-16',
-  //     buyer_postcode = '06018';
 
   Map<String, String> state = {
     "pg": 'html5_inicis',
-    "pay_method": 'card',
+    "payMethod": 'card',
     "name": '아임포트 결제데이터 분석',
-    "merchant_uid": "mid_${DateTime.now().millisecondsSinceEpoch}",
+    "merchantUid": "mid_${DateTime.now().millisecondsSinceEpoch}",
     "amount": '39000',
-    "buyer_name": '홍길동',
-    "buyer_tel": '01012345678',
-    "buyer_email": 'example@naver.com',
-    "buyer_addr": '서울시 강남구 신사동 661-16',
-    "buyer_postcode": '06018'
+    "buyerName": '홍길동',
+    "buyerTel": '01012345678',
+    "buyerEmail": 'example@naver.com',
+    "buyerAddr": '서울시 강남구 신사동 661-16',
+    "buyerPostcode": '06018',
+
+    "vbankDue": "",
+    "bizNum": "",
+    "digital": "",
+    "escrow": "",
   };
+  TextEditingController vbankDueCtr = TextEditingController();
+  TextEditingController bizNumCtr = TextEditingController();
+  TextEditingController nameCtr = TextEditingController();
+  TextEditingController amountCtr = TextEditingController();
+  TextEditingController merchantUidCtr = TextEditingController();
+  TextEditingController buyerNameCtr = TextEditingController();
+  TextEditingController buyerTelCtr = TextEditingController();
+  TextEditingController buyerEmailCtr = TextEditingController();
 
-  final inpuFieldsController = List<TextEditingController>();
-
-
-  DateTime vbank_due = DateTime.now();
+  DateTime vbankDue = DateTime.now();
 
   _callbackPg(int index) {
     setState(() {
@@ -60,47 +62,227 @@ class _PaymentTestState extends State<PaymentTest> {
     return TextEditingController(text: this.state[text]);
   }
 
-  onChangePg(String pg, int index) {
-    if (pg == this.state["pg"]) return;
+  // onChangePg(String pg, int index) {
+  //   if (pg == this.state["pg"]) return;
 
-    // 결제수단 리스트가 다른 경우, 바뀐 리스트의 맨 처음 값으로 바꾼다
-    var payMethodLists = PAY_METHOD_BY_PG[pg];
-    if (payMethodLists != PAY_METHOD_BY_PG[this.state["pg"]]) {
-      // this.setState({ pay_method: Object.keys(payMethodLists)[0] });
-      setState(() {
-        _pgIndex = index;
-        this.state["pay_method"] = payMethodLists.keys.elementAt(0);
-      });
-    }
-    setState(() {
-      this.state["pg"] = pg;
-      pgPicker = false;
-      payMethodPicker = false;
-    });
-  }
+  //   // 결제수단 리스트가 다른 경우, 바뀐 리스트의 맨 처음 값으로 바꾼다
+  //   var payMethodLists = PAY_METHOD_BY_PG[pg];
+  //   if (payMethodLists != PAY_METHOD_BY_PG[this.state["pg"]]) {
+  //     // this.setState({ payMethod: Object.keys(payMethodLists)[0] });
+  //     setState(() {
+  //       _pgIndex = index;
+  //       this.state["payMethod"] = payMethodLists.keys.elementAt(0);
+  //     });
+  //   }
+  //   setState(() {
+  //     this.state["pg"] = pg;
+  //     pgPicker = false;
+  //     payMethodPicker = false;
+  //   });
+  // }
 
   onChangePayMethod(String payMethod, int index) {
-    if (payMethod == this.state["pay_method"]) return;
+    if (payMethod == this.state["payMethod"]) return;
     setState(() {
       _pgMethodIndex = index;
-      this.state["pay_method"] = payMethod;
+      this.state["payMethod"] = payMethod;
     });
   }
 
-  Widget renderPaymentInfo() {
-    List<Widget> list = new List<Widget>();
-    for (var i = 0; i < PAYMENT_INFO.length; i++) {
-      this.inpuFieldsController.add(TextEditingController(text: this.state[PAYMENT_INFO.elementAt(i)["value"]]));
-      list.add(Row(
+  // Widget renderPaymentInfo() {
+  //   List<Widget> list = new List<Widget>();
+  //   for (var i = 0; i < PAYMENT_INFO.length; i++) {
+  //     this.inpuFieldsController.add(TextEditingController(
+  //         text: this.state[PAYMENT_INFO.elementAt(i)["value"]]));
+  //     list.add(Row(
+  //       children: <Widget>[
+  //         new Text(
+  //           PAYMENT_INFO.elementAt(i)["name"],
+  //           style: TextStyle(color: Colors.black),
+  //         ),
+  //         Expanded(
+  //             flex: 3,
+  //             child: TextField(
+  //               controller: this.inpuFieldsController[i],
+  //               decoration: InputDecoration(
+  //                   // labelText: "Qty",
+  //                   ),
+  //             )),
+  //       ],
+  //     ));
+  //   }
+  //   return new Column(children: list);
+  // }
+
+  Widget renderButton() {
+    return Expanded(
+        flex: 3, child: FlatButton(child: Text("결제하기"), onPressed: onPress));
+  }
+
+  // onPressPayment() {
+  //   // FlutterIamport.showNativeView(this.state);
+  //   print(this.state);
+  //   print(this.inpuFieldsController);
+  //   for (var i = 0; i < PAYMENT_INFO.length; i++) {
+  //     print(PAYMENT_INFO[i]["value"]);
+  //     this.state[PAYMENT_INFO[i]["value"]] =
+  //         this.inpuFieldsController[i].value.text;
+  //     print(this.inpuFieldsController[i].value.text);
+  //   }
+
+  //   print(this.state);
+  //   Navigator.pushNamed(
+  //     context,
+  //     "/payment",
+  //     arguments: (this.state),
+  //   );
+  // }
+
+  onPress() {
+    // const params = {
+    //   pg,
+    //   payMethod: method,
+    //   merchant_uid: merchantUid,
+    //   name,
+    //   amount,
+    //   buyer_name: buyerName,
+    //   buyer_tel: buyerTel,
+    //   buyer_email: buyerEmail,
+    //   escrow,
+    // };
+
+    // // 신용카드의 경우, 할부기한 추가
+    // if (method === 'card' && cardQuota !== 0) {
+    //   params.display = {
+    //     card_auota: cardQuota === 1 ? [] : [cardQuota],
+    //   };
+    // }
+
+    // // 가상계좌의 경우, 입금기한 추가
+    // if (method === 'vbank' && vbankDue) {
+    //   params.vbank_due = vbankDue;
+    // }
+
+    // // 다날 && 가상계좌의 경우, 사업자 등록번호 10자리 추가
+    // if (method === 'vbank' && pg === 'danal_tpay') {
+    //   params.biz_num = bizNum;
+    // }
+
+    // // 휴대폰 소액결제의 경우, 실물 컨텐츠 여부 추가
+    // if (method === 'phone') {
+    //   params.digital = digital;
+    // }
+
+    // // 정기결제의 경우, customer_uid 추가
+    // if (pg === 'kcp_billing') {
+    //   params.customer_uid = `cuid_${new Date().getTime()}`;
+    // }
+
+    // navigation.navigate('Payment', { params });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var payMethod = this.state["payMethod"];
+    var pg = this.state["pg"];
+    List<Row> child = [];
+
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "PG사",
+          style: TextStyle(color: Colors.black),
+        ),
+        new RaisedButton(
+          onPressed: () async {
+            final Map<String, dynamic> pg =
+                await _asyncSimpleDialog(context, "Pg사", PGS);
+            List<Map<String, String>> methods = getMethods(pg);
+
+            setState(() {
+              state["pg"] = pg["value"];
+              state["payMethod"] = methods[0]["value"];
+              _pgMethodIndex = 0;
+              _pgIndex = pg["index"];
+            });
+          },
+          child: Text(PGS.elementAt(this._pgIndex)["label"]),
+        )
+      ],
+    ));
+
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "결제수단",
+          style: TextStyle(color: Colors.black),
+        ),
+        new RaisedButton(
+          onPressed: () async {
+            final Map<String, dynamic> methods = await _asyncSimpleDialog(
+                context, "Pg사", getMethods(this.state["pg"]));
+
+            setState(() {
+              _pgMethodIndex = methods["index"];
+              state["payMethod"] = methods["value"];
+            });
+          },
+          child: Text(getMethods(this.state["pg"])
+              .elementAt(this._pgMethodIndex)["label"]),
+        )
+      ],
+    ));
+
+    if (payMethod == "card") {
+      child.add(Row(
         children: <Widget>[
           new Text(
-            PAYMENT_INFO.elementAt(i)["name"],
+            "할부개월수",
+            style: TextStyle(color: Colors.black),
+          ),
+          new RaisedButton(
+            onPressed: () async {
+              final Map<String, dynamic> methods = await _asyncSimpleDialog(
+                  context, "Pg사", getQuotas(this.state["pg"]));
+
+              setState(() {
+                _quotasIndex = methods["index"];
+              });
+            },
+            child: Text(getQuotas(this.state["pg"])
+                .elementAt(this._quotasIndex)["label"]),
+          )
+        ],
+      ));
+    }
+
+    if (payMethod == "vbank") {
+      child.add(Row(
+        children: <Widget>[
+          new Text(
+            "입금기한",
             style: TextStyle(color: Colors.black),
           ),
           Expanded(
               flex: 3,
               child: TextField(
-                controller: this.inpuFieldsController[i],
+                controller: vbankDueCtr,
+              )),
+        ],
+      ));
+    }
+
+    if (payMethod == "vbank" && pg == "danal_tpay") {
+      child.add(Row(
+        children: <Widget>[
+          new Text(
+            "사업자번호",
+            style: TextStyle(color: Colors.black),
+          ),
+          Expanded(
+              flex: 3,
+              child: TextField(
+                controller: bizNumCtr,
                 decoration: InputDecoration(
                     // labelText: "Qty",
                     ),
@@ -108,58 +290,283 @@ class _PaymentTestState extends State<PaymentTest> {
         ],
       ));
     }
-    return new Column(children: list);
-  }
 
-  Widget renderButton() {
-    return FlatButton(child: Text("결제하기"), onPressed: onPressPayment);
-  }
-
-  onPressPayment() {
-    // FlutterIamport.showNativeView(this.state);
-    print(this.state);
-    print(this.inpuFieldsController);
-    for (var i = 0; i < PAYMENT_INFO.length; i++) {
-      print(PAYMENT_INFO[i]["value"]);
-      this.state[PAYMENT_INFO[i]["value"]] = this.inpuFieldsController[i].value.text;
-      print(this.inpuFieldsController[i].value.text);
+    if (payMethod == "phone") {
+      child.add(Row(
+        children: <Widget>[
+          new Text(
+            "실물컨텐츠",
+            style: TextStyle(color: Colors.black),
+          ),
+          Switch(
+            value: true,
+            onChanged: (value) {
+              setState(() {
+                // isSwitched = value;
+              });
+            },
+          )
+        ],
+      ));
     }
 
-    print(this.state);
-    Navigator.pushNamed(
-      context,
-      "/payment",
-       arguments: (this.state),
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "에스크로",
+          style: TextStyle(color: Colors.black),
+        ),
+        Switch(
+          value: true,
+          onChanged: (value) {
+            setState(() {
+              // isSwitched = value;
+            });
+          },
+        )
+      ],
+    ));
+
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "주문명",
+          style: TextStyle(color: Colors.black),
+        ),
+        Expanded(
+            flex: 3,
+            child: TextField(
+              controller: nameCtr,
+              decoration: InputDecoration(
+                  // labelText: "Qty",
+                  ),
+            )),
+      ],
+    ));
+
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "결제금액",
+          style: TextStyle(color: Colors.black),
+        ),
+        Expanded(
+            flex: 3,
+            child: TextField(
+              controller: amountCtr,
+              decoration: InputDecoration(
+                  // labelText: "Qty",
+                  ),
+            )),
+      ],
+    ));
+
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "주문번호",
+          style: TextStyle(color: Colors.black),
+        ),
+        Expanded(
+            flex: 3,
+            child: TextField(
+              controller: merchantUidCtr,
+              decoration: InputDecoration(
+                  // labelText: "Qty",
+                  ),
+            )),
+      ],
+    ));
+
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "이름",
+          style: TextStyle(color: Colors.black),
+        ),
+        Expanded(
+            flex: 3,
+            child: TextField(
+              controller: buyerNameCtr,
+              decoration: InputDecoration(
+                  // labelText: "Qty",
+                  ),
+            )),
+      ],
+    ));
+
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "전화번호",
+          style: TextStyle(color: Colors.black),
+        ),
+        Expanded(
+            flex: 3,
+            child: TextField(
+              controller: buyerTelCtr,
+              decoration: InputDecoration(
+                  // labelText: "Qty",
+                  ),
+            )),
+      ],
+    ));
+
+    child.add(Row(
+      children: <Widget>[
+        new Text(
+          "이메일",
+          style: TextStyle(color: Colors.black),
+        ),
+        Expanded(
+            flex: 3,
+            child: TextField(
+              controller: buyerEmailCtr,
+              decoration: InputDecoration(
+                  // labelText: "Qty",
+                  ),
+            )),
+      ],
+    ));
+
+    child.add(Row(children: <Widget>[renderButton()]));
+    return Scaffold(
+      appBar: AppBar(title: Text("결제테스트")),
+      body: Column(children: child),
+      // body: CupertinoPageScaffold(
+      //   child: DefaultTextStyle(
+      //     style: TextStyle(),
+      //     child: DecoratedBox(
+      //       decoration: BoxDecoration(color: CupertinoColors.white),
+      //       child: ListView(
+      //         children: <Widget>[
+      //           const Padding(padding: EdgeInsets.only(top: 32.0)),
+      //           PgPicker(this.pgPicker, this.state["pg"], _pgIndex, onChangePg),
+      //           PayMethodPicker(
+      //               this.state["pg"],
+      //               this._pgMethodIndex,
+      //               this.vbank_due,
+      //               this.payMethodPicker,
+      //               this.state["payMethod"],
+      //               this.onChangePayMethod),
+      //           renderPaymentInfo(),
+      //           renderButton(),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ));
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text("결제테스트")),
-        // height: MediaQuery.of(context).size.height,
-        body: CupertinoPageScaffold(
-          child: DefaultTextStyle(
-            style: TextStyle(),
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: CupertinoColors.white),
-              child: ListView(
-                children: <Widget>[
-                  const Padding(padding: EdgeInsets.only(top: 32.0)),
-                  PgPicker(this.pgPicker, this.state["pg"], _pgIndex, onChangePg),
-                  PayMethodPicker(
-                      this.state["pg"],
-                      this._pgMethodIndex,
-                      this.vbank_due,
-                      this.payMethodPicker,
-                      this.state["pay_method"],
-                      this.onChangePayMethod),
-                  renderPaymentInfo(),
-                  renderButton(),
-                ],
-              ),
-            ),
-          ),
-        ));
-  }
 }
+
+// enum Departments { Production, Research, Purchasing, Marketing, Accounting }
+
+Future<Map<String, dynamic>> _asyncSimpleDialog(
+    BuildContext context, String title, List<Map<String, dynamic>> data) async {
+  _renderOptions() {
+    print("data");
+    print(data);
+    List<Widget> list = new List<Widget>();
+    for (var i = 0; i < data.length; i++) {
+      list.add(
+        SimpleDialogOption(
+          onPressed: () {
+            Map<String, dynamic> args = {
+              "value": data[i]['value'].toString(),
+              "index": i,
+            };
+
+            Navigator.pop(context, args);
+          },
+          child: Text(data[i]['label']),
+        ),
+      );
+    }
+    return list;
+  }
+
+  return await showDialog<Map<String, dynamic>>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text(title),
+          children: _renderOptions(),
+        );
+      });
+}
+
+class PaymentArg2 {
+//  pg: PropTypes.oneOf(PG),
+//     payMethod: PropTypes.oneOf(PAY_METHOD),
+//     currency: PropTypes.oneOf(CURRENCY),
+//     notice_url: PropTypes.oneOfType([
+//       PropTypes.string,
+//       PropTypes.arrayOf(PropTypes.string),
+//     ]),
+//     display: PropTypes.shape({
+//       card_quota: PropTypes.arrayOf(PropTypes.number),
+//     }),
+//     merchant_uid: PropTypes.string.isRequired,
+//     amount: PropTypes.oneOfType([
+//       PropTypes.string.isRequired,
+//       PropTypes.number.isRequired,
+//     ]),
+//     buyer_tel: PropTypes.string.isRequired,
+//     app_scheme: PropTypes.string.isRequired,
+//     escrow: PropTypes.bool,
+//     name: PropTypes.string,
+//     tax_free: PropTypes.number,
+//     buyer_name: PropTypes.string,
+//     buyer_email: PropTypes.string,
+//     buyer_addr: PropTypes.string,
+//     buyer_postcode: PropTypes.string,
+//     custom_data: PropTypes.object,
+//     vbank_due: PropTypes.string,
+//     popup: PropTypes.bool,
+}
+
+// class PaymentArg {
+//   String pg;
+//   String payMethod;
+//   String currency;
+//   String notice_url;
+//   String merchant_uid;
+//   String amount;
+//   String buyer_tel;
+//   String app_scheme;
+//   String escrow;
+//   String name;
+//   String tax_free;
+//   String buyer_name;
+//   String buyer_email;
+//   String buyer_addr;
+//   String buyer_postcode;
+//   String custom_data;
+//   String vbank_due;
+//   String popup;
+
+// PaymentArg(this.pg, this.payMethod, this.currency, this.notice_url, this.merchant_uid, this.amount, this.);
+
+// PaymentArg.fromJson(Map json) // named constructor
+//     : pg = json['pg'],
+//       payMethod = json['payMethod'],
+//       currency = json['currency'],
+//       notice_url = json['notice_url'],
+//       merchant_uid = json['merchant_uid'],
+//       amount = json['amount'],
+//       buyer_tel = json['buyer_tel'],
+//       app_scheme = json['app_scheme'],
+//       escrow = json['escrow'],
+//       name = json['name'],
+//       tax_free = json['tax_free'],
+//       buyer_name = json['buyer_name'],
+//       buyer_email = json['buyer_email'],
+//       buyer_addr = json['buyer_addr'],
+//       buyer_postcode = json['buyer_postcode'],
+//       custom_data = json['custom_data'],
+//       vbank_due = json['vbank_due'],
+//       popup = json['popup'];
+
+// }

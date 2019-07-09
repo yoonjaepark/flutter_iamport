@@ -17,8 +17,8 @@ class FlutterIamport {
   }
 
  
-  Future<String> loadHTML(Object data, Rect rect, Function callback) async {
-    launch(data, rect);
+  Future<String> loadHTML(Object data, String userCode, Rect rect, Function callback) async {
+    launch(data, userCode, rect);
   }
 
   Future<Null> reloadUrl(String url, Rect rect) async {
@@ -46,7 +46,7 @@ class FlutterIamport {
     await _channel.invokeMethod('resize', args);
   }
 
-  Future<Null> launch(data, rect) async {
+  Future<Null> launch(data, userCode, rect) async {
     await _channel.invokeMethod('showNativeView', <String, dynamic>{
       // 'uri': uri,
       'rect': {
@@ -55,7 +55,8 @@ class FlutterIamport {
         'width': rect.width,
         'height': rect.height,
       },
-      'data': data
+      'data': data,
+      'userCode': userCode
     });
   }
 

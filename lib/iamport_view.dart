@@ -9,14 +9,21 @@ import 'package:flutter_iamport/flutter_iamport.dart';
 // typedef void IamportViewCreatedCallback(IamportViewController controller);
 
 class IamportView extends StatefulWidget {
-  const IamportView({Key key, this.appBar, this.param, this.initialChild, this.callback})
+  const IamportView(
+      {Key key,
+      this.appBar,
+      this.param,
+      this.userCode,
+      this.callback,
+      this.initialChild})
       : super(key: key);
 
   // final IamportViewCreatedCallback onIamportViewCreated;
   final PreferredSizeWidget appBar;
   final param;
-  final Widget initialChild;
+  final userCode;
   final callback;
+  final Widget initialChild;
 
   @override
   State<StatefulWidget> createState() => _IamportViewState();
@@ -27,6 +34,7 @@ class _IamportViewState extends State<IamportView> {
   var _onBack;
   var param;
   var callback;
+  var userCode;
   Rect _rect;
   Timer _resizeTimer;
   @override
@@ -58,7 +66,8 @@ class _IamportViewState extends State<IamportView> {
           if (_rect == null) {
             _rect = value;
             // webviewReference.launch(widget.param, _rect);
-            webviewReference.loadHTML(widget.param, _rect, this.callback);
+            webviewReference.loadHTML(
+                widget.param, this.userCode, _rect, this.callback);
           } else {
             if (_rect != value) {
               _rect = value;
