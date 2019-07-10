@@ -5,7 +5,31 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 
 class FlutterIamport {
+  factory FlutterIamport() => _instance ??= FlutterIamport._();
+
+  FlutterIamport._() {
+    _channel.setMethodCallHandler(_handleMessages);
+  }
+  static FlutterIamport _instance;
+
   static const MethodChannel _channel = const MethodChannel('flutter_iamport');
+
+  final _onUrlChanged = StreamController<String>.broadcast();
+  // final _onHttpError = StreamController<WebViewHttpError>.broadcast();
+  // final _onStateChanged = StreamController<WebViewStateChanged>.broadcast();
+  final _onDestroy = StreamController<Null>.broadcast();
+  final _onBack = StreamController<Null>.broadcast();
+
+  Future<Null> _handleMessages(MethodCall call) async {
+    print('_handleMessages');
+
+    switch (call.method) {
+      case 'onState':
+        print('onState');
+        _onUrlChanged.add(null);
+        break;
+    }
+  }
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -16,9 +40,18 @@ class FlutterIamport {
     _channel.invokeMethod('showNativeView', arg);
   }
 
- 
-  Future<String> loadHTML(Object data, String userCode, Rect rect, Function callback) async {
-    launch(data, userCode, rect);
+  /// Listening the OnDestroy LifeCycle Event for Android
+  Stream<Null> get onDestroy => _onDestroy.stream;
+
+  /// Listening the back key press Event for Android
+  Stream<Null> get onBack => _onBack.stream;
+
+  /// Listening url changed
+  Stream<String> get onUrlChanged => _onUrlChanged.stream;
+
+  Future<String> loadHTML(
+      Object data, String userCode, Rect rect, Function callback) async {
+    launch(data, userCode, rect, callback);
   }
 
   Future<Null> reloadUrl(String url, Rect rect) async {
@@ -31,9 +64,9 @@ class FlutterIamport {
 
   void dispose() {
     _onDestroy.close();
+    _onBack.close();
+    _instance = null;
   }
-
-  final _onDestroy = StreamController<Null>.broadcast();
 
   Future<Null> resize(Rect rect) async {
     final args = {};
@@ -46,9 +79,11 @@ class FlutterIamport {
     await _channel.invokeMethod('resize', args);
   }
 
-  Future<Null> launch(data, userCode, rect) async {
+  Future<Null> launch(data, userCode, rect, callback) async {
+    print('launch');
+    print(userCode);
+    print(data);
     await _channel.invokeMethod('showNativeView', <String, dynamic>{
-      // 'uri': uri,
       'rect': {
         'left': rect.left,
         'top': rect.top,
@@ -56,7 +91,8 @@ class FlutterIamport {
         'height': rect.height,
       },
       'data': data,
-      'userCode': userCode
+      'userCode': userCode,
+      'callback': callback.toString()
     });
   }
 

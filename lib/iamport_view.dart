@@ -32,15 +32,20 @@ class IamportView extends StatefulWidget {
 class _IamportViewState extends State<IamportView> {
   final webviewReference = FlutterIamport();
   var _onBack;
-  var param;
-  var callback;
-  var userCode;
+  // var param;
+  // var userCode;
   Rect _rect;
   Timer _resizeTimer;
+  StreamSubscription<String> _onUrlChanged;
+
   @override
   void initState() {
     super.initState();
     webviewReference.close();
+
+    _onUrlChanged = FlutterIamport().onUrlChanged.listen((String url) {
+      print("dsd");
+    });
   }
 
   /// Equivalent to [Navigator.of(context)._history.last].
@@ -67,7 +72,7 @@ class _IamportViewState extends State<IamportView> {
             _rect = value;
             // webviewReference.launch(widget.param, _rect);
             webviewReference.loadHTML(
-                widget.param, this.userCode, _rect, this.callback);
+                widget.param, widget.userCode, _rect, widget.callback);
           } else {
             if (_rect != value) {
               _rect = value;
@@ -89,6 +94,7 @@ class _IamportViewState extends State<IamportView> {
     super.dispose();
     _onBack?.cancel();
     webviewReference.close();
+    _onUrlChanged.cancel();
   }
 }
 
