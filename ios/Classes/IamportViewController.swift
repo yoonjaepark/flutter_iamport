@@ -115,7 +115,7 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
        
         // 결제 완료
         if (isPaymentOver(url: webView.url!.absoluteString)) {
-            channel.invokeMethod("onState", arguments: "Hello from iOS native host")
+            channel.invokeMethod("onState", arguments: webView.url!.absoluteString)
         }
     }
     

@@ -26,7 +26,7 @@ class FlutterIamport {
     switch (call.method) {
       case 'onState':
         print('onState');
-        _onUrlChanged.add(null);
+        _onUrlChanged.add(call.arguments);
         break;
     }
   }

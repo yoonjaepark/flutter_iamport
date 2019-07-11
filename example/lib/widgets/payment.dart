@@ -20,8 +20,21 @@ class _PaymentState extends State<Payment> {
     });
   }
 
-  callback() {
+  callback(String url) {
     print("callback");
+    print(url);
+    print(Uri.decodeComponent(url));
+    // Navigator.pop(context);
+    print(Uri.splitQueryString(url));
+
+    print(Uri.splitQueryString(url)['imp_uid']);
+    Map<String, dynamic> args = {
+      'success' :  Uri.splitQueryString(url)['success'],
+      'impUid' : Uri.splitQueryString(url)['imp_uid'],
+      'errorMsg' : Uri.splitQueryString(url)['error_msg'],
+    };
+    // print(Uri.base.queryParameters['imp_uid']);
+    Navigator.pushReplacementNamed(context, '/PaymentResult', arguments: args);
   }
 
   @override
