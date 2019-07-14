@@ -47,12 +47,9 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewDidLoad")
         
         let frameworkBundle = Bundle(for: FlutterIamportPlugin.self)
-        print(frameworkBundle.bundleURL)
-        print(frameworkBundle.url(forResource: "www/payment", withExtension: "html"))
-        
+      
         if let url = frameworkBundle.url(forResource: "www/payment", withExtension: "html") {
             let request = URLRequest(url: url)
             webView.load(request)
@@ -89,20 +86,11 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     
     @available(iOS 8.0, *)
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
-        
-        //        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        //        activityIndicator.frame = CGRect(x: webView.frame.midX-50, y: webView.frame.midY-50, width: 100, height: 100)
-        //        activityIndicator.color = UIColor.red
-        //        activityIndicator.hidesWhenStopped = true
-        //        activityIndicator.startAnimating()
-        //
-        //        self.view.addSubview(activityIndicator)
     }
     
     
     @available(iOS 8.0, *)
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
-        print("Finished navigating to url \(webView.url)");
         if (!loadingFinished) {
             let userCode = self.userCode
             let triggerCallback = ""
@@ -115,7 +103,7 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
        
         // 결제 완료
         if (isPaymentOver(url: webView.url!.absoluteString)) {
-            channel.invokeMethod("onState", arguments: webView.url!.absoluteString)
+            channel.invokeMethod("onState", arguments: webView.url!.query)
         }
     }
     
@@ -124,13 +112,8 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     @available
     (iOS 8.0, *) func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if self.isUrlStartsWithAppScheme(uri: navigationAction.request.url!.absoluteString) {
-            print("isUrlStartsWithAppScheme")
-            
-            
             let splittedUrl = navigationAction.request.url!.absoluteString.components(separatedBy: "://");
             let scheme = splittedUrl[0];
-            // "hdcardappcardansimclick"
-            // itms-appss://apps.apple.com/kr/app/id1177889176
             let marketUrl : String = scheme == "itmss" ? "https://" + splittedUrl[1] : navigationAction.request.url!.absoluteString;
             // 앱 오픈
             UIApplication.shared.isNetworkActivityIndicatorVisible = true

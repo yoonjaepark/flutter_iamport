@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.os.Build;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -23,42 +24,40 @@ import org.json.JSONStringer;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 
 public class IamportWebViewClient extends WebViewClient {
   protected Context reactContext;
   protected Activity activity;
 
   private String userCode;
-//  ReadableMap
   private JSONObject data;
   private String callback;
   private String triggerCallback;
   protected String appScheme;
-//  ReadableMap
-//  private loading;
-
+  private MethodChannel channel;
   private Boolean loadingFinished = false;
 
   private static final String DEFAULT_REDIRECT_URL_WHEN_SUCCESS = "https://service.iamport.kr/payments/success";
   private static final String DEFAULT_REDIRECT_URL_WHEN_FAILURE = "https://service.iamport.kr/payments/fail";
 
-  public IamportWebViewClient(Context reactContext, Activity activity, MethodCall methodCall) {
+
+
+  public IamportWebViewClient(Context reactContext, Activity activity, MethodCall methodCall, MethodChannel channel) {
     this.reactContext = reactContext;
     this.activity = activity;
     this.data = new JSONObject();
-//    userCode = param.getString("userCode");
-//    data = param.getMap("data");
+    this.channel = channel;
 
-//    callback = param.getString("callback");
-//    triggerCallback = param.getString("triggerCallback");
-//    appScheme = data.getString("app_scheme");
-//    loading = param.getMap("loading");
-
-    HashMap<String, Object> arg = (HashMap<String, Object>) methodCall.argument("data");
+    HashMap<String, Object> arg = methodCall.argument("data");
     try {
       userCode = "iamport";
+      data.put("pg", (String) arg.get("pg"));
+
       data.put("pay_method", (String) arg.get("pay_method"));
       data.put("merchant_uid", (String) arg.get("merchant_uid"));
       data.put("amount", (String) arg.get("amount"));
@@ -75,13 +74,15 @@ public class IamportWebViewClient extends WebViewClient {
 
   @Override
   public boolean shouldOverrideUrlLoading(WebView view, String url) {
-    Log.i("url", url);
 
     if (isPaymentOver(url)) { // 결제시도가 종료된 후, 콜백이 설정되었으면, 리액트 네이티브로 event dispatch
-//      reactContext
-//        .getJSModule(RCTDeviceEventEmitter.class)
-//        .emit("message", url);
+      Uri uri = Uri.parse(url);
+      Log.d("shouldOverrid", url.toString());
+      Log.d("shouldOverrid", uri.getPath());
+      Log.d("shouldOverrid", uri.getAuthority());
+      Log.d("shouldOverrid", uri.getEncodedQuery());
 
+      this.channel.invokeMethod("onState", uri.getEncodedQuery());
       return false;
     }
     if (isUrlStartsWithProtocol(url)) return false;
@@ -117,6 +118,10 @@ public class IamportWebViewClient extends WebViewClient {
     if (!loadingFinished && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 무한루프 방지
       setCustomLoadingPage(view);
 
+      view.getSettings().setJavaScriptEnabled(true);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        view.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+      }
       view.evaluateJavascript("IMP.init('" + userCode + "');", null);
       view.evaluateJavascript("IMP.request_pay(" + data + ", " + triggerCallback + ");", null);
 
@@ -126,8 +131,6 @@ public class IamportWebViewClient extends WebViewClient {
 
   /* 커스텀 로딩화면 셋팅 */
   private void setCustomLoadingPage(WebView view) {
-//    String image = loading.getString("image");
-//    String message = loading.getString("message");
     String image = "";
     String message = "";
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -136,42 +139,6 @@ public class IamportWebViewClient extends WebViewClient {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       view.evaluateJavascript("document.getElementById('imp-rn-msg').innerText = '" + message + "';", null);
     }
-  }
-
-  /* ReadableMap을 JSONObject로 변경 */
-  private JSONObject toJSONObject(String data) { // https://gist.github.com/mfmendiola/bb8397162df9f76681325ab9f705748b
-    JSONObject jsonObject = new JSONObject();
-
-//    try {
-//      iterator = data.keySetIterator();
-//
-//      while (iterator.hasNextKey()) {
-//        String key = iterator.nextKey();
-//        ReadableType type = data.getType(key);
-//
-//        switch (type) {
-//          case Boolean:
-//            jsonObject.put(key, data.getBoolean(key));
-//            break;
-//          case Number:
-//            jsonObject.put(key, data.getDouble(key));
-//            break;
-//          case String:
-//            jsonObject.put(key, data.getString(key));
-//            break;
-//          case Map: // nested object recursive하게 처리
-//            jsonObject.put(key, toJSONObject(data.getMap(key)));
-//            break;
-//          default :
-//            jsonObject.put(key, data.getMap(key));
-//            break;
-//        }
-//      }
-//    } catch(JSONException e) {
-//
-//    }
-
-    return jsonObject;
   }
 
   /* url이 https, http 또는 javascript로 시작하는지 체크 */
@@ -197,10 +164,7 @@ public class IamportWebViewClient extends WebViewClient {
 
   protected void startNewActivity(String parsingUri) {
     Uri uri = Uri.parse(parsingUri);
-    Log.d("###", parsingUri);
     Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
-    Log.d("###", uri.toString());
-    Log.d("###", uri.toString());
 
     this.activity.startActivity(newIntent);
   }

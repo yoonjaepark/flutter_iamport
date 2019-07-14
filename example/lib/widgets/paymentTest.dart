@@ -22,6 +22,7 @@ class _PaymentTestState extends State<PaymentTest> {
     'payMethod': 'card',
     'name': '아임포트 결제데이터 분석',
     'merchantUid': 'mid_${DateTime.now().millisecondsSinceEpoch}',
+    'app_scheme': 'example',
     'amount': '39000',
     'buyerName': '홍길동',
     'buyerTel': '01012345678',
@@ -31,8 +32,9 @@ class _PaymentTestState extends State<PaymentTest> {
     'cardQuota': 0,
     'vbankDue': null,
     'bizNum': null,
-    'digital': null,
-    'escrow': null,
+    'digital': false,
+    'escrow': false,
+    'language': 'ko',
   };
   TextEditingController vbankDueCtr = TextEditingController();
   TextEditingController bizNumCtr = TextEditingController();
@@ -60,13 +62,21 @@ class _PaymentTestState extends State<PaymentTest> {
     Map<String, dynamic> params = {
       'pg': this.state['pg'],
       'pay_method': this.state['payMethod'],
-      'merchant_uid': this.merchantUidCtr.text,
       'name': this.nameCtr.text,
+      'merchant_uid': this.merchantUidCtr.text,
+      'app_scheme': this.state['app_scheme'],
       'amount': this.amountCtr.text,
       'buyer_name': this.buyerNameCtr.text,
       'buyer_tel': this.buyerTelCtr.text,
       'buyer_email': this.buyerEmailCtr.text,
-      'escrow': this.state['escrow']
+      'buyerAddr': '서울시 강남구 신사동 661-16',
+      // 'buyerPostcode': '06018',
+      // 'cardQuota': 0,
+      // 'vbankDue': null,
+      // 'bizNum': null,
+      // 'digital': false,
+      'escrow': this.state['escrow'],
+      'language': this.state['language'],
     };
 
     // 신용카드의 경우, 할부기한 추가
@@ -223,10 +233,10 @@ class _PaymentTestState extends State<PaymentTest> {
             style: TextStyle(color: Colors.black),
           ),
           Switch(
-            value: true,
+            value: state["digital"],
             onChanged: (value) {
               setState(() {
-                // isSwitched = value;
+                state["digital"] = value;
               });
             },
           )
@@ -241,10 +251,10 @@ class _PaymentTestState extends State<PaymentTest> {
           style: TextStyle(color: Colors.black),
         ),
         Switch(
-          value: true,
+          value: state["escrow"],
           onChanged: (value) {
             setState(() {
-              // isSwitched = value;
+              state["escrow"] = value;
             });
           },
         )

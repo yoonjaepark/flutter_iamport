@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_iamport/error_on_params.dart';
 import 'package:flutter_iamport/flutter_iamport.dart';
+import 'package:flutter_iamport/util/index.dart';
 
 // typedef void IamportViewCreatedCallback(IamportViewController controller);
 
@@ -63,32 +65,37 @@ class _IamportViewState extends State<IamportView> {
   @override
   Widget build(BuildContext context) {
     print("##this.param##");
-
     print(widget.param);
-    return Scaffold(
-      appBar: widget.appBar,
-      resizeToAvoidBottomInset: false,
-      body: _WebviewPlaceholder(
-        onRectChanged: (Rect value) {
-          if (_rect == null) {
-            _rect = value;
-            // webviewReference.launch(widget.param, _rect);
-            webviewReference.loadHTML(
-                widget.param, widget.userCode, _rect, widget.callback);
-          } else {
-            if (_rect != value) {
+
+    var validateResult = validateProps(widget.userCode, widget.param);
+    if (validateResult['validate'] == true) {
+      return Scaffold(
+        appBar: widget.appBar,
+        resizeToAvoidBottomInset: false,
+        body: _WebviewPlaceholder(
+          onRectChanged: (Rect value) {
+            if (_rect == null) {
               _rect = value;
-              _resizeTimer?.cancel();
-              _resizeTimer = Timer(const Duration(milliseconds: 250), () {
-                webviewReference.resize(_rect);
-              });
+              // webviewReference.launch(widget.param, _rect);
+              webviewReference.loadHTML(
+                  widget.param, widget.userCode, _rect, widget.callback);
+            } else {
+              if (_rect != value) {
+                _rect = value;
+                _resizeTimer?.cancel();
+                _resizeTimer = Timer(const Duration(milliseconds: 250), () {
+                  webviewReference.resize(_rect);
+                });
+              }
             }
-          }
-        },
-        child: widget.initialChild ??
-            const Center(child: const CircularProgressIndicator()),
-      ),
-    );
+          },
+          child: widget.initialChild ??
+              const Center(child: const CircularProgressIndicator()),
+        ),
+      );
+    }
+
+    return ErrorOnParams(message: validateResult['message']);
   }
 
   @override

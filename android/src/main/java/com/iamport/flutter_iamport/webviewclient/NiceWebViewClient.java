@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 
 public class NiceWebViewClient extends IamportWebViewClient {
     private final static String BANKPAY = "kftc-bankpay";
@@ -21,8 +22,8 @@ public class NiceWebViewClient extends IamportWebViewClient {
     private final static String PACKAGE_ISP = "kvp.jjy.MispAndroid320";
     private final static String PACKAGE_BANKPAY = "com.kftc.bankpay.android";
 
-    public NiceWebViewClient(Context reactContext, Activity activity, MethodCall methodCall) {
-        super(reactContext, activity, methodCall);
+    public NiceWebViewClient(Context reactContext, Activity activity, MethodCall methodCall, MethodChannel channel) {
+        super(reactContext, activity, methodCall, channel);
     }
 
     public void beforeStartNewActivity(String url, Intent intent) {

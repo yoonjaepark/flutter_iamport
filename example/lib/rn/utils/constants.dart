@@ -1,4 +1,4 @@
-const PGS = [
+ const PGS = [
   {
     'value': 'html5_inicis',
     'label': '웹 표준 이니시스',
@@ -86,12 +86,13 @@ const METHODS = [
     'value': 'trans',
     'label': '실시간 계좌이체',
   },
-  {'value': 'phone', 'label': '휴대폰 소액결제'},
+  {
+    'value': 'phone',
+    'label': '휴대폰 소액결제'
+  },
 ];
 
-var METHODS_FOR_INICIS = [
-  METHODS,
-  [
+var METHODS_FOR_INICIS =  [ METHODS, [
     {
       'value': 'samsung',
       'label': '삼성페이',
@@ -112,12 +113,10 @@ var METHODS_FOR_INICIS = [
       'value': 'happymoney',
       'label': '해피머니',
     },
-  ]
-].expand((i) => i).toList();
+]].expand((i) => i).toList(); 
+ 
 
-var METHODS_FOR_UPLUS = [
-  METHODS,
-  [
+var METHODS_FOR_UPLUS =[ METHODS, [
     {
       'value': 'cultureland',
       'label': '문화상품권',
@@ -130,18 +129,14 @@ var METHODS_FOR_UPLUS = [
       'value': 'booknlife',
       'label': '도서상품권',
     },
-  ]
-].expand((i) => i).toList();
+]].expand((i) => i).toList(); 
 
-var METHODS_FOR_KCP = [
-  METHODS,
-  [
+var METHODS_FOR_KCP =[ METHODS, [
     {
       'value': 'samsung',
       'label': '삼성페이',
     },
-  ]
-].expand((i) => i).toList();
+]].expand((i) => i).toList(); 
 
 const METHODS_FOR_MOBILIANS = [
   {
@@ -185,3 +180,4 @@ const QUOTAS = [
     'label': '일시불',
   },
 ];
+  

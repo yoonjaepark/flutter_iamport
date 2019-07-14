@@ -54,7 +54,7 @@ public class FlutterIamportPlugin implements MethodCallHandler, PluginRegistry.A
     switch (methodCall.method) {
       case "showNativeView":
         if (iamportViewManager == null || iamportViewManager.closed == true) {
-          iamportViewManager = new IamportViewManager(activity, context);
+          iamportViewManager = new IamportViewManager(activity, context, channel);
         }
         FrameLayout.LayoutParams params = buildLayoutParams(methodCall);
 

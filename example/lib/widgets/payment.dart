@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iamport/flutter_iamport.dart';
 import 'package:flutter_iamport/iamport_view.dart';
 
 class Payment extends StatefulWidget {
@@ -23,15 +21,19 @@ class _PaymentState extends State<Payment> {
   callback(String url) {
     print("callback");
     print(url);
-    print(Uri.decodeComponent(url));
-    // Navigator.pop(context);
-    print(Uri.splitQueryString(url));
 
-    print(Uri.splitQueryString(url)['imp_uid']);
+    print(Uri.decodeQueryComponent(url.toString()));
+
+    print(Uri.splitQueryString(url.toString()));
+    print(Uri.splitQueryString(url.toString())['success']);
+    print(Uri.splitQueryString(url.toString())['https://service.iamport.kr/payments/success?success']);
+    print(Uri.splitQueryString(url.toString())['error_msg']);
+
+    print(Uri.splitQueryString(url.toString())['imp_uid']);
     Map<String, dynamic> args = {
-      'success' :  Uri.splitQueryString(url)['success'],
-      'impUid' : Uri.splitQueryString(url)['imp_uid'],
-      'errorMsg' : Uri.splitQueryString(url)['error_msg'],
+      'success' :  Uri.splitQueryString(url.toString())['success'],
+      'impUid' : Uri.splitQueryString(url.toString())['imp_uid'],
+      'errorMsg' : Uri.splitQueryString(url.toString())['error_msg'],
     };
     // print(Uri.base.queryParameters['imp_uid']);
     Navigator.pushReplacementNamed(context, '/PaymentResult', arguments: args);
@@ -39,12 +41,9 @@ class _PaymentState extends State<Payment> {
 
   @override
   Widget build(BuildContext context) {
-    print("#######build");
-    print(this.state);
-
     return IamportView(
         appBar: new AppBar(
-          title: const Text('Widget webview'),
+          title: const Text('Pament'),
         ),
         param: this.state,
         userCode: "iamport",

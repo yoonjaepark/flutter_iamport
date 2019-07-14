@@ -5,10 +5,9 @@ class PaymentResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenArguments args =
-        new ScreenArguments.fromJson(ModalRoute.of(context).settings.arguments);
-    print('PaymentResult');
-    print(args);
+    ResultArguments args =
+        new ResultArguments.fromJson(ModalRoute.of(context).settings.arguments);
+
     return Container(
         decoration: BoxDecoration(color: Colors.white),
         child: Center(
@@ -103,15 +102,15 @@ class PaymentResult extends StatelessWidget {
   }
 }
 
-class ScreenArguments {
+class ResultArguments {
   // 아규먼트의 타이틀과 메시지. 생성자에 의해서만 초기화되고 변경할 수 없음
   bool success;
   String impUid;
   String errorMsg;
 
-  ScreenArguments.fromJson(Map json) {
-    this.success = json["success"] ?? false;
-    this.impUid = json["impUid"];
-    this.errorMsg = json["errorMsg"];
+  ResultArguments.fromJson(Map json) {
+    this.success = json["success"] == "true";
+    this.impUid = json["impUid"] ?? "";
+    this.errorMsg = json["errorMsg"] ?? "";
   }
 }

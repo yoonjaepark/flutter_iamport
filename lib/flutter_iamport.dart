@@ -21,7 +21,6 @@ class FlutterIamport {
   final _onBack = StreamController<Null>.broadcast();
 
   Future<Null> _handleMessages(MethodCall call) async {
-    print('_handleMessages');
 
     switch (call.method) {
       case 'onState':

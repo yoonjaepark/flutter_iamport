@@ -2,6 +2,7 @@ package com.iamport.flutter_iamport;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -36,7 +37,6 @@ public class IamportWebView extends WebView {
         /* Set web settings */
         WebSettings settings = this.getSettings();
         settings.setJavaScriptEnabled(true);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // Configures the WebView's behavior when a secure origin attempts to load a resource from an insecure origin.
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
