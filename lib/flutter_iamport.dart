@@ -15,13 +15,10 @@ class FlutterIamport {
   static const MethodChannel _channel = const MethodChannel('flutter_iamport');
 
   final _onUrlChanged = StreamController<String>.broadcast();
-  // final _onHttpError = StreamController<WebViewHttpError>.broadcast();
-  // final _onStateChanged = StreamController<WebViewStateChanged>.broadcast();
   final _onDestroy = StreamController<Null>.broadcast();
   final _onBack = StreamController<Null>.broadcast();
 
   Future<Null> _handleMessages(MethodCall call) async {
-
     switch (call.method) {
       case 'onState':
         print('onState');
@@ -48,9 +45,9 @@ class FlutterIamport {
   /// Listening url changed
   Stream<String> get onUrlChanged => _onUrlChanged.stream;
 
-  Future<String> loadHTML(
-      Object data, String userCode, Rect rect, Function callback) async {
-    launch(data, userCode, rect, callback);
+  Future<Null> loadHTML(Object data, String userCode,
+      Map<String, dynamic> loading, Rect rect, Function callback) async {
+    launch(data, userCode, loading, rect, callback);
   }
 
   Future<Null> reloadUrl(String url, Rect rect) async {
@@ -78,10 +75,8 @@ class FlutterIamport {
     await _channel.invokeMethod('resize', args);
   }
 
-  Future<Null> launch(data, userCode, rect, callback) async {
-    print('launch');
-    print(userCode);
-    print(data);
+  Future<Null> launch(data, userCode, loading, rect, callback) async {
+  
     await _channel.invokeMethod('showNativeView', <String, dynamic>{
       'rect': {
         'left': rect.left,
@@ -90,6 +85,7 @@ class FlutterIamport {
         'height': rect.height,
       },
       'data': data,
+      'loading': loading,
       'userCode': userCode,
       'callback': callback.toString()
     });

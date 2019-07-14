@@ -3,10 +3,10 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_iamport/flutter_iamport.dart';
-import 'package:flutter_iamport_example/widgets/home.dart';
-import 'package:flutter_iamport_example/widgets/payment.dart';
-import 'package:flutter_iamport_example/widgets/paymentResult.dart';
-import 'package:flutter_iamport_example/widgets/paymentTest.dart';
+import 'widgets/home.dart';
+import 'widgets/payment.dart';
+import 'widgets/paymentTest.dart';
+import 'widgets/paymentResult.dart';
 
 void main() => runApp(MyApp());
 

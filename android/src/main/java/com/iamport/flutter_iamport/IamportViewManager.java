@@ -67,6 +67,10 @@ public class IamportViewManager {
 
         HashMap<String, Object> arg = (HashMap<String, Object>) methodCall.argument("data");
         pg = (String) arg.get("pay_method");
+        webView.getSettings().setJavaScriptEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
 
         switch(pg) {
             case "nice": {

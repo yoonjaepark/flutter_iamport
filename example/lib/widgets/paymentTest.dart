@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_iamport/flutter_iamport.dart';
-import 'package:flutter_iamport_example/utils/constants.dart';
-import 'package:flutter_iamport_example/utils/util.dart';
+import '../utils/constants.dart';
+import '../utils/util.dart';
 
 class PaymentTest extends StatefulWidget {
   static const String routeName = '/cupertino/picker';

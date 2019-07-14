@@ -41,10 +41,9 @@ public class IamportWebViewClient extends WebViewClient {
   protected String appScheme;
   private MethodChannel channel;
   private Boolean loadingFinished = false;
-
+  private Map<String, String> loading;
   private static final String DEFAULT_REDIRECT_URL_WHEN_SUCCESS = "https://service.iamport.kr/payments/success";
   private static final String DEFAULT_REDIRECT_URL_WHEN_FAILURE = "https://service.iamport.kr/payments/fail";
-
 
 
   public IamportWebViewClient(Context reactContext, Activity activity, MethodCall methodCall, MethodChannel channel) {
@@ -55,7 +54,7 @@ public class IamportWebViewClient extends WebViewClient {
 
     HashMap<String, Object> arg = methodCall.argument("data");
     try {
-      userCode = "iamport";
+      this.userCode = methodCall.argument("userCode");
       data.put("pg", (String) arg.get("pg"));
 
       data.put("pay_method", (String) arg.get("pay_method"));
@@ -70,18 +69,22 @@ public class IamportWebViewClient extends WebViewClient {
     } catch (JSONException e) {
       e.printStackTrace();
     }
+    final HashMap<String, String> loadingParams = methodCall.argument("loading");
+
+    this.loading  = new HashMap<String, String>() {{
+      put("image", loadingParams.get("image"));
+      put("message", loadingParams.get("message"));
+    }};
+
+
   }
 
   @Override
   public boolean shouldOverrideUrlLoading(WebView view, String url) {
+    Log.i("shouldOverrideUrlLoading", url);
 
     if (isPaymentOver(url)) { // 결제시도가 종료된 후, 콜백이 설정되었으면, 리액트 네이티브로 event dispatch
       Uri uri = Uri.parse(url);
-      Log.d("shouldOverrid", url.toString());
-      Log.d("shouldOverrid", uri.getPath());
-      Log.d("shouldOverrid", uri.getAuthority());
-      Log.d("shouldOverrid", uri.getEncodedQuery());
-
       this.channel.invokeMethod("onState", uri.getEncodedQuery());
       return false;
     }
@@ -115,13 +118,16 @@ public class IamportWebViewClient extends WebViewClient {
   /* WebView가 load되면 IMP.init, IMP.request_pay를 호출한다 */
   @Override
   public void onPageFinished(WebView view, String url) {
+    Log.i("onPageFinished", data.toString());
+    Log.i("onPageFinished", url.toString());
+
     if (!loadingFinished && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 무한루프 방지
       setCustomLoadingPage(view);
 
-      view.getSettings().setJavaScriptEnabled(true);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        view.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        Log.d("onPageFinished", Integer.toString( view.getSettings().getMixedContentMode()));
       }
+
       view.evaluateJavascript("IMP.init('" + userCode + "');", null);
       view.evaluateJavascript("IMP.request_pay(" + data + ", " + triggerCallback + ");", null);
 
@@ -131,8 +137,9 @@ public class IamportWebViewClient extends WebViewClient {
 
   /* 커스텀 로딩화면 셋팅 */
   private void setCustomLoadingPage(WebView view) {
-    String image = "";
-    String message = "";
+    String image =  this.loading.get("image");
+    String message = this.loading.get("message");
+    Log.d("message", message);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       view.evaluateJavascript("document.getElementById('imp-rn-img').src = '" + image + "';", null);
     }
