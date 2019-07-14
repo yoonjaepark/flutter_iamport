@@ -5,7 +5,27 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 
 class FlutterIamport {
+  factory FlutterIamport() => _instance ??= FlutterIamport._();
+
+  FlutterIamport._() {
+    _channel.setMethodCallHandler(_handleMessages);
+  }
+  static FlutterIamport _instance;
+
   static const MethodChannel _channel = const MethodChannel('flutter_iamport');
+
+  final _onUrlChanged = StreamController<String>.broadcast();
+  final _onDestroy = StreamController<Null>.broadcast();
+  final _onBack = StreamController<Null>.broadcast();
+
+  Future<Null> _handleMessages(MethodCall call) async {
+    switch (call.method) {
+      case 'onState':
+        print('onState');
+        _onUrlChanged.add(call.arguments);
+        break;
+    }
+  }
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -16,9 +36,18 @@ class FlutterIamport {
     _channel.invokeMethod('showNativeView', arg);
   }
 
- 
-  Future<String> loadHTML(Object data, Rect rect, Function callback) async {
-    launch(data, rect);
+  /// Listening the OnDestroy LifeCycle Event for Android
+  Stream<Null> get onDestroy => _onDestroy.stream;
+
+  /// Listening the back key press Event for Android
+  Stream<Null> get onBack => _onBack.stream;
+
+  /// Listening url changed
+  Stream<String> get onUrlChanged => _onUrlChanged.stream;
+
+  Future<Null> loadHTML(Object data, String userCode,
+      Map<String, dynamic> loading, Rect rect, Function callback) async {
+    launch(data, userCode, loading, rect, callback);
   }
 
   Future<Null> reloadUrl(String url, Rect rect) async {
@@ -31,9 +60,9 @@ class FlutterIamport {
 
   void dispose() {
     _onDestroy.close();
+    _onBack.close();
+    _instance = null;
   }
-
-  final _onDestroy = StreamController<Null>.broadcast();
 
   Future<Null> resize(Rect rect) async {
     final args = {};
@@ -46,16 +75,19 @@ class FlutterIamport {
     await _channel.invokeMethod('resize', args);
   }
 
-  Future<Null> launch(data, rect) async {
+  Future<Null> launch(data, userCode, loading, rect, callback) async {
+  
     await _channel.invokeMethod('showNativeView', <String, dynamic>{
-      // 'uri': uri,
       'rect': {
         'left': rect.left,
         'top': rect.top,
         'width': rect.width,
         'height': rect.height,
       },
-      'data': data
+      'data': data,
+      'loading': loading,
+      'userCode': userCode,
+      'callback': callback.toString()
     });
   }
 

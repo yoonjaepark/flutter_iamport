@@ -17,15 +17,6 @@ class _HomeState extends State<Home> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          // new Row(
-          //     mainAxisAlignment: MainAxisAlignment.start,
-          //     mainAxisSize: MainAxisSize.max,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: <Widget>[
-          //       Flexible(child: Text("아임포트 플루터 네이티브 테스트를 위한 화면입니다.")),
-          //       Flexible(
-          //           child: Text("아래 버튼을 눌러 결제 및 본인인증을 테스트를 위한 화면으로 넘어갑니다."))
-          //     ]),
           new Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.all(16.0),
@@ -61,7 +52,7 @@ class _HomeState extends State<Home> {
                     )),
                 FlatButton(
                     key: null,
-                    // onPressed: buttonPressed,
+                    onPressed: _showcontent,
                     child: new Text(
                       "본인인증 테스트",
                       style: new TextStyle(
@@ -77,6 +68,33 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[])
         ]);
+  }
+
+  void _showcontent() {
+    showDialog<Null>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('미구현 기능'),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: <Widget>[
+                new Text('추후 지원예정'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

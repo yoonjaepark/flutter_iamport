@@ -8,9 +8,6 @@ import android.util.Log;
 import android.view.Display;
 import android.widget.FrameLayout;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
@@ -19,8 +16,6 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
-import io.flutter.plugin.platform.PlatformView;
-import io.flutter.plugin.platform.PlatformViewFactory;
 
 /**
  * FlutterIamportPlugin
@@ -50,11 +45,10 @@ public class FlutterIamportPlugin implements MethodCallHandler, PluginRegistry.A
 
   @Override
   public void onMethodCall(MethodCall methodCall, Result result) {
-    Log.d("###", methodCall.method);
     switch (methodCall.method) {
       case "showNativeView":
         if (iamportViewManager == null || iamportViewManager.closed == true) {
-          iamportViewManager = new IamportViewManager(activity, context);
+          iamportViewManager = new IamportViewManager(activity, context, channel);
         }
         FrameLayout.LayoutParams params = buildLayoutParams(methodCall);
 

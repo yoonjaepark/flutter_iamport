@@ -3,9 +3,10 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_iamport/flutter_iamport.dart';
-import 'package:flutter_iamport_example/widgets/home.dart';
-import 'package:flutter_iamport_example/widgets/payment.dart';
-import 'package:flutter_iamport_example/widgets/paymentTest.dart';
+import 'widgets/home.dart';
+import 'widgets/payment.dart';
+import 'widgets/paymentTest.dart';
+import 'widgets/paymentResult.dart';
 
 void main() => runApp(MyApp());
 
@@ -49,9 +50,10 @@ class _MyAppState extends State<MyApp> {
         title: 'My Flutter App',
         home: Home(),
         routes: <String, WidgetBuilder>{
-           '/payment': (_) => Payment(),
+          '/home': (_) => Home(),
+          '/payment': (_) => Payment(),
           '/paymentTest': (_) => PaymentTest(),
-          // '/PaymentResult': (_) => PaymentResult(),
+          '/PaymentResult': (_) => PaymentResult(),
           // '/Certification': (_) => Certification(),
           // '/CertificationTest': (_) => CertificationTest(),
           // '/CertificationResult': (_) => CertificationResult(),

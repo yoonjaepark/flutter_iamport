@@ -1,8 +1,8 @@
 name: flutter_iamport
-description: A new flutter plugin project.
+description: A Flutter plugin for using the iamport for payment on Android and iOS.
 version: 0.0.1
-author:
-homepage:
+author: YoonJaePark <rhkdro@gmail.com>
+homepage: https://github.com/yoonjaepark/flutter_iamport
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

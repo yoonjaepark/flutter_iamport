@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iamport/flutter_iamport.dart';
 import 'package:flutter_iamport/iamport_view.dart';
+import '../utils/util.dart';
+
 
 class Payment extends StatefulWidget {
   Payment({Key key}) : super(key: key);
@@ -11,29 +11,38 @@ class Payment extends StatefulWidget {
 
 class _PaymentState extends State<Payment> {
   var state;
-
+  var userCode;
   didChangeDependencies() async {
+    print("didChangeDependencies");
     print(ModalRoute.of(context).settings.arguments);
     setState(() {
       state = ModalRoute.of(context).settings.arguments;
     });
   }
 
-  callback() {  
-    print("callback");
+  callback(String url) {
+     Map<String, dynamic> args = {
+      'success': Uri.splitQueryString(url.toString())['success'],
+      'impUid': Uri.splitQueryString(url.toString())['imp_uid'],
+      'errorMsg': Uri.splitQueryString(url.toString())['error_msg'],
+    };
+    // print(Uri.base.queryParameters['imp_uid']);
+    Navigator.pushReplacementNamed(context, '/PaymentResult', arguments: args);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("#######build");
-    print(this.state);
-
+ 
     return IamportView(
         appBar: new AppBar(
-          title: const Text('Widget webview'),
+          title: const Text('Pament'),
         ),
+        loading: {
+          "message": '잠시만 기다려주세요...', // 로딩화면 메시지
+          "image": 'https://raw.githubusercontent.com/iamport/iamport-react-native/master/src/img/iamport-logo.png' // 커스텀 로딩화면 이미지
+        },
         param: this.state,
-        callback: this.callback
-        );
+        userCode: getUserCode(this.state['pg']),
+        callback: this.callback);
   }
 }

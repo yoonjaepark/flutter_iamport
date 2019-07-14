@@ -1,23 +1,23 @@
 # flutter_iamport
 [![Build Status](https://img.shields.io/badge/pub-v0.0.1-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
-A Flutter plugin for using the iamport for payment on Android and iOS.
+Android 및 iOS에서 iamport를 사용하여 결제 할 때 사용하는 Flutter 플러그인입니다.
 
-## List of features
+## 기능 구현 예정 리스트
 
-- Nice pay
-- Authenticate for phone
-- Code optimization
+- 나이스 페이
+- 휴대폰 본인 인증
+- 코드 최적화
 
-## Installation
+## 설치
 
-To get things up and running, you'll have to declare a pubspec dependency in your Flutter project. Also some minimal Android & iOS specific configuration must be done, otherise your app will crash.
+어플리케이션을 실행하려면 Flutter 프로젝트에서 pubspec 의존성을 선언해야합니다. 또한 일부 최소 Android 및 iOS 특정 구성을 완료해야합니다. 앱이 다운 될 수 있습니다.
 
-## On your Flutter project
+## Flutter 프로젝트
 
-See the installation instructions on pub.
+pub의 설치 지침을 참조하십시오.
 
-## Seeting(Android)
+## 설정(Android)
 In order to use the iamport interworking module in iOS, you need to set the following items.
 #### AndroidManifest permission
 
@@ -30,10 +30,10 @@ In order to use the iamport interworking module in iOS, you need to set the foll
 ```
 
 ## Seeting(IOS)
-In order to use the iamport interworking module in iOS, you have to set the following 3 items.
+iOS에서 iamport 연동 모듈을 사용하려면 다음 3 가지 항목을 설정해야합니다.
 
 #### 1. App Scheme Setting
-You need to set the URL identifier to use when returning after payment in the external payment application (eg PACO, ShinhanPanPay).
+외부 결제 애플리케이션 (예 : PACO, ShinhanPanPay)에서 결제 후 반환 할 때 사용할 URL 식별자를 설정해야합니다.
 
 ```html
 <key>CFBundleURLTypes</key>
@@ -49,8 +49,8 @@ You need to set the URL identifier to use when returning after payment in the ex
 	</array>
 ```
 
-#### 2. Registration of external app list
-3rd party app(example) You need to register your external apps list so that you can run it
+#### 2. 외부 앱 목록 등록
+타사 앱 (예) 외부 앱 목록을 등록해야 앱을 실행할 수 있습니다.
 
 ```html
 <key>LSApplicationQueriesSchemes</key>
@@ -106,13 +106,13 @@ You need to set the URL identifier to use when returning after payment in the ex
 
 ## example
 
-#### 1. Common / Regular billing usage example
+#### 1. 일반 / 정기 결제 사용 예
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_iamport/iamport_view.dart'; // Import iamport payment module.
+import 'package:flutter_iamport/iamport_view.dart'; // 아임포트 결제모듈을 불러옵니다.
 
 class Payment extends StatelessWidget {
-    callback(String url) { /* [Required] After the payment is finished, change the router and deliver the result. */
+    callback(String url) { /* [필수입력] 결제 종료 후, 라우터를 변경하고 결과를 전달합니다. */
         Map<String, dynamic> args = {
         'success' :  Uri.splitQueryString(url)['success'],
         'impUid' : Uri.splitQueryString(url)['imp_uid'],
@@ -123,7 +123,8 @@ class Payment extends StatelessWidget {
 
 
 
-    /* [Required] Enter the data required for payment. */    Map<String, dynamic> state = {
+      /* [필수입력] 결제에 필요한 데이터를 입력합니다. 추후 인터페이스 추가 */
+     Map<String, dynamic> state = {
         'pg': 'html5_inicis',
         'payMethod': 'card',
         'name': '아임포트 결제데이터 분석',
