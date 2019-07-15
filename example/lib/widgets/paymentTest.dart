@@ -230,10 +230,14 @@ class _PaymentTestState extends State<PaymentTest> {
                 style: TextStyle(color: Colors.black),
               )),
           Expanded(
-              flex: 3,
-              child: TextField(
-                  controller: vbankDueCtr,
-                  decoration: InputDecoration(border: OutlineInputBorder())))
+              child: Padding(
+                  padding: EdgeInsets.only(right: 20, top: 5),
+                  child: Container(
+                      height: 40,
+                      child: TextField(
+                          controller: vbankDueCtr,
+                          decoration:
+                              InputDecoration(border: OutlineInputBorder())))))
         ],
       ));
     }
@@ -249,10 +253,14 @@ class _PaymentTestState extends State<PaymentTest> {
                 style: TextStyle(color: Colors.black),
               )),
           Expanded(
-              flex: 3,
-              child: TextField(
-                  controller: bizNumCtr,
-                  decoration: InputDecoration(border: OutlineInputBorder())))
+              child: Padding(
+                  padding: EdgeInsets.only(right: 20, top: 5),
+                  child: Container(
+                      height: 40,
+                      child: TextField(
+                          controller: bizNumCtr,
+                          decoration:
+                              InputDecoration(border: OutlineInputBorder())))))
         ],
       ));
     }
