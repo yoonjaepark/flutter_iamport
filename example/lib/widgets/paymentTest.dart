@@ -123,71 +123,98 @@ class _PaymentTestState extends State<PaymentTest> {
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          "PG사",
-          style: TextStyle(color: Colors.black),
-        ),
-        new RaisedButton(
-          onPressed: () async {
-            final Map<String, dynamic> pg =
-                await _asyncSimpleDialog(context, "Pg사", PGS);
-            List<Map<String, String>> methods = getMethods(pg);
-            print('methods');
-            print(methods);
-            setState(() {
-              state["pg"] = pg["value"];
-              state["payMethod"] = methods[0]["value"];
-              _pgMethodIndex = 0;
-              _pgIndex = pg["index"];
-            });
-          },
-          child: Text(PGS.elementAt(this._pgIndex)["label"]),
-        )
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              "PG사",
+              style: TextStyle(color: Colors.black),
+            )),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(right: 20),
+                child: new FlatButton(
+                    shape: Border.all(width: 1.0, color: Colors.black54),
+                    onPressed: () async {
+                      final Map<String, dynamic> pg =
+                          await _asyncSimpleDialog(context, "Pg사", PGS);
+                      List<Map<String, String>> methods = getMethods(pg);
+                      setState(() {
+                        state["pg"] = pg["value"];
+                        state["payMethod"] = methods[0]["value"];
+                        _pgMethodIndex = 0;
+                        _pgIndex = pg["index"];
+                      });
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        PGS.elementAt(this._pgIndex)["label"],
+                      ),
+                    ))))
       ],
     ));
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          "결제수단",
-          style: TextStyle(color: Colors.black),
-        ),
-        new RaisedButton(
-          onPressed: () async {
-            final Map<String, dynamic> methods = await _asyncSimpleDialog(
-                context, "Pg사", getMethods(this.state["pg"]));
-            setState(() {
-              _pgMethodIndex = methods["index"];
-              state["payMethod"] = methods["value"];
-            });
-          },
-          child: Text(getMethods(this.state["pg"])
-              .elementAt(this._pgMethodIndex)["label"]),
-        )
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              "수단",
+              style: TextStyle(color: Colors.black),
+            )),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(right: 20),
+                child: new FlatButton(
+                    shape: Border.all(width: 1.0, color: Colors.black54),
+                    onPressed: () async {
+                      final Map<String, dynamic> methods =
+                          await _asyncSimpleDialog(
+                              context, "Pg사", getMethods(this.state["pg"]));
+                      setState(() {
+                        _pgMethodIndex = methods["index"];
+                        state["payMethod"] = methods["value"];
+                      });
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(getMethods(this.state["pg"])
+                          .elementAt(this._pgMethodIndex)["label"]),
+                    ))))
       ],
     ));
 
     if (payMethod == "card") {
       child.add(Row(
         children: <Widget>[
-          new Text(
-            "할부개월수",
-            style: TextStyle(color: Colors.black),
-          ),
-          new RaisedButton(
-            onPressed: () async {
-              final Map<String, dynamic> methods = await _asyncSimpleDialog(
-                  context, "Pg사", getQuotas(this.state["pg"]));
-              print("methods");
-              print(methods);
-              setState(() {
-                this.state['cardQuota'] = methods['value'];
-                _quotasIndex = methods['index'];
-              });
-            },
-            child: Text(getQuotas(this.state['pg'])
-                .elementAt(this._quotasIndex)['label']),
-          )
+          Container(
+              padding: EdgeInsets.only(left: 20),
+              width: 100,
+              child: new Text(
+                "할부개월수",
+                style: TextStyle(color: Colors.black),
+              )),
+          Expanded(
+              child: Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: new FlatButton(
+                      shape: Border.all(width: 1.0, color: Colors.black54),
+                      onPressed: () async {
+                        final Map<String, dynamic> methods =
+                            await _asyncSimpleDialog(
+                                context, "Pg사", getQuotas(this.state["pg"]));
+                        setState(() {
+                          this.state['cardQuota'] = methods['value'];
+                          _quotasIndex = methods['index'];
+                        });
+                      },
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(getQuotas(this.state['pg'])
+                            .elementAt(this._quotasIndex)['label']),
+                      ))))
         ],
       ));
     }
@@ -195,15 +222,18 @@ class _PaymentTestState extends State<PaymentTest> {
     if (payMethod == 'vbank') {
       child.add(Row(
         children: <Widget>[
-          new Text(
-            '입금기한',
-            style: TextStyle(color: Colors.black),
-          ),
+          Container(
+              padding: EdgeInsets.only(left: 20),
+              width: 100,
+              child: new Text(
+                '입금기한',
+                style: TextStyle(color: Colors.black),
+              )),
           Expanded(
               flex: 3,
               child: TextField(
-                controller: vbankDueCtr,
-              )),
+                  controller: vbankDueCtr,
+                  decoration: InputDecoration(border: OutlineInputBorder())))
         ],
       ));
     }
@@ -211,16 +241,18 @@ class _PaymentTestState extends State<PaymentTest> {
     if (payMethod == 'vbank' && pg == 'danal_tpay') {
       child.add(Row(
         children: <Widget>[
-          new Text(
-            '사업자번호',
-            style: TextStyle(color: Colors.black),
-          ),
+          Container(
+              padding: EdgeInsets.only(left: 20),
+              width: 100,
+              child: new Text(
+                '사업자번호',
+                style: TextStyle(color: Colors.black),
+              )),
           Expanded(
               flex: 3,
               child: TextField(
-                controller: bizNumCtr,
-                decoration: InputDecoration(),
-              )),
+                  controller: bizNumCtr,
+                  decoration: InputDecoration(border: OutlineInputBorder())))
         ],
       ));
     }
@@ -228,10 +260,13 @@ class _PaymentTestState extends State<PaymentTest> {
     if (payMethod == 'phone') {
       child.add(Row(
         children: <Widget>[
-          new Text(
-            '실물컨텐츠',
-            style: TextStyle(color: Colors.black),
-          ),
+          Container(
+              padding: EdgeInsets.only(left: 20),
+              width: 100,
+              child: new Text(
+                '실물컨텐츠',
+                style: TextStyle(color: Colors.black),
+              )),
           Switch(
             value: state["digital"],
             onChanged: (value) {
@@ -246,10 +281,13 @@ class _PaymentTestState extends State<PaymentTest> {
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          '에스크로',
-          style: TextStyle(color: Colors.black),
-        ),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              '에스크로',
+              style: TextStyle(color: Colors.black),
+            )),
         Switch(
           value: state["escrow"],
           onChanged: (value) {
@@ -263,97 +301,141 @@ class _PaymentTestState extends State<PaymentTest> {
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          '주문명',
-          style: TextStyle(color: Colors.black),
-        ),
-        Expanded(
-            flex: 3,
-            child: TextField(
-              controller: nameCtr,
-              decoration: InputDecoration(),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              '주문명',
+              style: TextStyle(color: Colors.black),
             )),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(right: 20, top: 5),
+                child: Container(
+                    height: 40,
+                    child: TextField(
+                        controller: nameCtr,
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder())))))
       ],
     ));
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          '결제금액',
-          style: TextStyle(color: Colors.black),
-        ),
-        Expanded(
-            flex: 3,
-            child: TextField(
-              controller: amountCtr,
-              decoration: InputDecoration(),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              '결제금액',
+              style: TextStyle(color: Colors.black),
             )),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(right: 20, top: 5),
+                child: Container(
+                    height: 40,
+                    child: TextField(
+                        controller: amountCtr,
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder())))))
       ],
     ));
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          '주문번호',
-          style: TextStyle(color: Colors.black),
-        ),
-        Expanded(
-            flex: 3,
-            child: TextField(
-              controller: merchantUidCtr,
-              decoration: InputDecoration(),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              '주문번호',
+              style: TextStyle(color: Colors.black),
             )),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(right: 20, top: 5),
+                child: Container(
+                    height: 40,
+                    child: TextField(
+                        controller: merchantUidCtr,
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder())))))
       ],
     ));
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          '이름',
-          style: TextStyle(color: Colors.black),
-        ),
-        Expanded(
-            flex: 3,
-            child: TextField(
-              controller: buyerNameCtr,
-              decoration: InputDecoration(),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              '이름',
+              style: TextStyle(color: Colors.black),
             )),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(right: 20, top: 5),
+                child: Container(
+                    height: 40,
+                    child: TextField(
+                        controller: buyerNameCtr,
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder())))))
       ],
     ));
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          '전화번호',
-          style: TextStyle(color: Colors.black),
-        ),
-        Expanded(
-            flex: 3,
-            child: TextField(
-              controller: buyerTelCtr,
-              decoration: InputDecoration(),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              '전화번호',
+              style: TextStyle(color: Colors.black),
             )),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(right: 20, top: 5),
+                child: Container(
+                    height: 40,
+                    child: TextField(
+                        controller: buyerTelCtr,
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder())))))
       ],
     ));
 
     child.add(Row(
       children: <Widget>[
-        new Text(
-          '이메일',
-          style: TextStyle(color: Colors.black),
-        ),
-        Expanded(
-            flex: 3,
-            child: TextField(
-              controller: buyerEmailCtr,
-              decoration: InputDecoration(),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 100,
+            child: new Text(
+              '이메일',
+              style: TextStyle(color: Colors.black),
             )),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(right: 20, top: 5),
+                child: Container(
+                    height: 40,
+                    child: TextField(
+                        controller: buyerEmailCtr,
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder())))))
       ],
     ));
 
     child.add(Row(children: <Widget>[
       Expanded(
-          flex: 3, child: FlatButton(child: Text('결제하기'), onPressed: onPress))
+          flex: 1,
+          child: Padding(
+            padding: EdgeInsets.only(left: 40, right: 40, top: 20),
+            child: FlatButton(
+                color: Colors.blueAccent,
+                textColor: Colors.white,
+                child: Text('결제하기'),
+                onPressed: onPress),
+          ))
     ]));
     return Scaffold(
       appBar: AppBar(title: Text('결제테스트')),
