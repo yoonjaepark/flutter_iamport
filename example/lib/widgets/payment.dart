@@ -13,12 +13,10 @@ class _PaymentState extends State<Payment> {
   var state;
   var userCode;
   didChangeDependencies() async {
-    print("didChangeDependencies");
-    print(ModalRoute.of(context).settings.arguments);
     setState(() {
       state = ModalRoute.of(context).settings.arguments;
     });
-  }
+  } 
 
   callback(String url) {
      Map<String, dynamic> args = {

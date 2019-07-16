@@ -42,7 +42,6 @@ class _IamportViewState extends State<IamportView> {
     webviewReference.close();
 
     _onUrlChanged = FlutterIamport().onUrlChanged.listen((String url) async {
-      print(url);
       await webviewReference.close();
       widget.callback(url);
     });

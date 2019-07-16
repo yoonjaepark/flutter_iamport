@@ -1,5 +1,5 @@
 # flutter_iamport
-[![Build Status](https://img.shields.io/badge/pub-v0.0.1-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
+[![Build Status](https://img.shields.io/badge/pub-v0.0.2-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
 A Flutter plugin for using the iamport for payment on Android and iOS.
 
@@ -123,7 +123,8 @@ class Payment extends StatelessWidget {
 
 
 
-    /* [Required] Enter the data required for payment. */    Map<String, dynamic> state = {
+    /* [Required] Enter the data required for payment. */    
+    Map<String, dynamic> state = {
         'pg': 'html5_inicis',
         'payMethod': 'card',
         'name': '아임포트 결제데이터 분석',

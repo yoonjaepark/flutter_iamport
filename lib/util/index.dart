@@ -19,7 +19,6 @@ Map<String, dynamic> validateProps(userCode, data) {
   if (data['app_scheme'] == '' || data['app_scheme'] == null) {
     return {'validate': false, 'message': 'app_scheme은 필수입력입니다.'};
   }
-  print(data['language']);
   if ((data['language'] == '' || data['language'] == null) &&
       data['pg'] != 'paypal') {
     if (EN_AVAILABLE_PG.indexOf(data['pg']) != -1) {

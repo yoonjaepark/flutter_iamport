@@ -24,32 +24,27 @@ public class SwiftFlutterIamportPlugin: NSObject, FlutterPlugin {
                     let rect = params["rect"] as? Dictionary<String, Int>,
                     let userCode = params["userCode"] as? String,
                     let param = params["data"] as? [String: Any]{
+                 
                     self.iamportView!.rect = self.parseRect(rect: rect)
                     self.iamportView!.param = asString(jsonDictionary: param)
                     self.iamportView!.userCode = userCode
-                    
+                    self.iamportView!.loadding = params["loading"] as! [String : String];
                 } else {
                 }
                 UIApplication.shared.keyWindow?.rootViewController?.view.addSubview(self.iamportView!.view);
             }
         } else if call.method == "resize" {
-            print(call.method)
         } else if call.method == "close" {
-            print(call.method)
-            
             self.closeWebView()
-            
         }
         
     }
     
     public func closeWebView() {
         if (self.iamportView != nil) {
-            print("closeWebView")
             self.iamportView!.webView.stopLoading()
             self.iamportView!.webView.removeFromSuperview()
             self.iamportView!.webView.navigationDelegate = nil
-            //            self.iamportView!.webView.removeObserver(self, forKeyPath: "estimatedProgress")
             self.iamportView!.webView = nil;
             self.iamportView = nil;
             self.iamportResult!(nil)

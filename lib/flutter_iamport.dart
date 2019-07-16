@@ -21,7 +21,6 @@ class FlutterIamport {
   Future<Null> _handleMessages(MethodCall call) async {
     switch (call.method) {
       case 'onState':
-        print('onState');
         _onUrlChanged.add(call.arguments);
         break;
     }
@@ -54,7 +53,6 @@ class FlutterIamport {
     // final args = <String, String>{'url': url};
     final args = {};
     args['url'] = url;
-    print(url.toString());
     await _channel.invokeMethod('reloadUrl', args);
   }
 
@@ -76,7 +74,7 @@ class FlutterIamport {
   }
 
   Future<Null> launch(data, userCode, loading, rect, callback) async {
-  
+    
     await _channel.invokeMethod('showNativeView', <String, dynamic>{
       'rect': {
         'left': rect.left,

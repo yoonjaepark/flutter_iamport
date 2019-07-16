@@ -1,5 +1,5 @@
 # flutter_iamport
-[![Build Status](https://img.shields.io/badge/pub-v0.0.1-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
+[![Build Status](https://img.shields.io/badge/pub-v0.0.2-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
 Android 및 iOS에서 iamport를 사용하여 결제 할 때 사용하는 Flutter 플러그인입니다.
 
@@ -18,7 +18,8 @@ Android 및 iOS에서 iamport를 사용하여 결제 할 때 사용하는 Flutte
 pub의 설치 지침을 참조하십시오.
 
 ## 설정(Android)
-In order to use the iamport interworking module in iOS, you need to set the following items.
+Android에서 iamport 연동 모듈을 사용하려면 다음 항목을 설정해야합니다.
+
 #### AndroidManifest permission
 
 ```html
@@ -29,7 +30,7 @@ In order to use the iamport interworking module in iOS, you need to set the foll
         ...
 ```
 
-## Seeting(IOS)
+## 설정(IOS)
 iOS에서 iamport 연동 모듈을 사용하려면 다음 3 가지 항목을 설정해야합니다.
 
 #### 1. App Scheme Setting

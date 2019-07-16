@@ -133,7 +133,7 @@ class _PaymentTestState extends State<PaymentTest> {
         Expanded(
             child: Padding(
                 padding: EdgeInsets.only(right: 20),
-                child: new FlatButton(
+                child: FlatButton(
                     shape: Border.all(width: 1.0, color: Colors.black54),
                     onPressed: () async {
                       final Map<String, dynamic> pg =
@@ -167,7 +167,7 @@ class _PaymentTestState extends State<PaymentTest> {
         Expanded(
             child: Padding(
                 padding: EdgeInsets.only(right: 20),
-                child: new FlatButton(
+                child: FlatButton(
                     shape: Border.all(width: 1.0, color: Colors.black54),
                     onPressed: () async {
                       final Map<String, dynamic> methods =
@@ -199,7 +199,7 @@ class _PaymentTestState extends State<PaymentTest> {
           Expanded(
               child: Padding(
                   padding: EdgeInsets.only(right: 20),
-                  child: new FlatButton(
+                  child: FlatButton(
                       shape: Border.all(width: 1.0, color: Colors.black54),
                       onPressed: () async {
                         final Map<String, dynamic> methods =
@@ -446,9 +446,12 @@ class _PaymentTestState extends State<PaymentTest> {
           ))
     ]));
     return Scaffold(
-      appBar: AppBar(title: Text('결제테스트')),
-      body: ListView(children: child),
-    );
+        appBar: AppBar(title: Text('결제테스트')),
+        body: Container(
+          margin: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
+          color: Colors.white,
+          child: ListView(children: child),
+        ));
   }
 }
 
@@ -457,8 +460,6 @@ class _PaymentTestState extends State<PaymentTest> {
 Future<Map<String, dynamic>> _asyncSimpleDialog(
     BuildContext context, String title, List<Map<String, dynamic>> data) async {
   _renderOptions() {
-    print('data');
-    print(data);
     List<Widget> list = new List<Widget>();
     for (var i = 0; i < data.length; i++) {
       list.add(
@@ -468,7 +469,6 @@ Future<Map<String, dynamic>> _asyncSimpleDialog(
               'value': data[i]['value'].toString(),
               'index': i,
             };
-
             Navigator.pop(context, args);
           },
           child: Text(data[i]['label']),

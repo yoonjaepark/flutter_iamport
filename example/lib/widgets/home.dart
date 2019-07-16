@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                new FlatButton(
+                FlatButton(
                     key: null,
                     onPressed: () => {
                           Navigator.pushNamed(
@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           actions: <Widget>[
-            new FlatButton(
+            FlatButton(
               child: new Text('확인'),
               onPressed: () {
                 Navigator.of(context).pop();

@@ -6,7 +6,6 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
-  path_provider: ^1.1.2
   flutter:
     sdk: flutter
 

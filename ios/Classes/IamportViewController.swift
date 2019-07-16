@@ -14,7 +14,10 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
   
     let DEFAULT_REDIRECT_URL_WHEN_SUCCESS = "https://service.iamport.kr/payments/success"
     let DEFAULT_REDIRECT_URL_WHEN_FAILURE = "https://service.iamport.kr/payments/fail"
-  
+    var loadding = [
+        "message" : "",
+        "image" : ""
+    ]
     var channel: FlutterMethodChannel!
     var loadingFinished: Bool = false
     var webView: WKWebView!
@@ -25,12 +28,10 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     override func loadView() {
         super.loadView()
         let frameSize = view.bounds.size
-        
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
         let configuration = WKWebViewConfiguration()
         configuration.preferences = preferences
-        //        configuration.userContentController.addUserScript(WKUserScript)
         self.view.frame = CGRect(x: self.rect.minX, y: self.rect.minY, width: self.rect.width, height: self.rect.height)
         webView = WKWebView(frame: CGRect(x: self.rect.minX, y: 0, width: self.rect.width, height: self.rect.height), configuration: configuration)
         
@@ -49,9 +50,10 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
         super.viewDidLoad()
         
         let frameworkBundle = Bundle(for: FlutterIamportPlugin.self)
-      
+
         if let url = frameworkBundle.url(forResource: "www/payment", withExtension: "html") {
             let request = URLRequest(url: url)
+
             webView.load(request)
         }
     }
@@ -73,7 +75,6 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     
     @available(iOS 8.0, *)
     public func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Swift.Void){
-        print("33")
         
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "CANCEL", style: .cancel, handler: {(action) in completionHandler(false)})
@@ -92,12 +93,11 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     @available(iOS 8.0, *)
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
         if (!loadingFinished) {
-            let userCode = self.userCode
             let triggerCallback = ""
-            webView.evaluateJavaScript("IMP.init('" + userCode! + "');")
-            let message = "sadasda"
+            webView.evaluateJavaScript("IMP.init('" + self.userCode! + "');")
             webView.evaluateJavaScript("IMP.request_pay(" + self.param + ", " + triggerCallback + ");");
-            webView.evaluateJavaScript("document.getElementById('imp-rn-msg').innerText = '" + message + "';")
+           webView.evaluateJavaScript("document.getElementById('imp-rn-img').src = '" + self.loadding["image"]! + "';")
+            webView.evaluateJavaScript("document.getElementById('imp-rn-msg').innerText = '" + self.loadding["message"]! + "';")
             self.loadingFinished = true
         }
        
