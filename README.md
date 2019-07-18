@@ -1,5 +1,5 @@
 # flutter_iamport
-[![Build Status](https://img.shields.io/badge/pub-v0.0.2-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
+[![Build Status](https://img.shields.io/badge/pub-v0.0.4-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
 A Flutter plugin for using the iamport for payment on Android and iOS.
 
@@ -15,7 +15,7 @@ To get things up and running, you'll have to declare a pubspec dependency in you
 
 ## On your Flutter project
 
-See the installation instructions on pub.
+See the [installation instructions on pub](https://pub.dartlang.org/packages/flutter_iamport#-installing-tab-)
 
 ## Seeting(Android)
 In order to use the iamport interworking module in iOS, you need to set the following items.
@@ -102,6 +102,54 @@ You need to set the URL identifier to use when returning after payment in the ex
   <key>NSAllowsArbitraryLoads</key>
   <true/>
 </dict>
+```
+
+## model
+``` dart
+class Params {
+  String pg;
+  String pay_method;
+  bool escrow;
+  String merchant_uid;
+  String name;
+  int amount;
+  Object custom_data;
+  int tax_free;
+  int vat;
+  String currency;
+  String language;
+  String buyer_name;
+  String buyer_tel;
+  String buyer_email;
+  String buyer_addr;
+  String buyer_postcode;
+  String notice_url;
+  Display display;
+
+  bool digital;
+  String vbank_due;
+  String m_redirect_url;
+  String app_scheme;
+  String biz_num;
+
+  String customer_uid;
+  bool popup;
+  bool naverPopupMode;
+
+  static Map<String, dynamic> toMap(Params json) {
+    return {
+      'pay_method': json.pay_method,
+      'merchant_uid': json.merchant_uid,
+      'amount': json.amount,
+      ...
+  }
+
+  Params.fromJson(Map<String, dynamic> json) {
+    this.pay_method = json['pay_method'];
+    this.merchant_uid = json['merchant_uid'];
+    this.amount = json['amount'];
+    ...
+  }
 ```
 
 ## example

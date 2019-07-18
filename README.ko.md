@@ -1,5 +1,5 @@
 # flutter_iamport
-[![Build Status](https://img.shields.io/badge/pub-v0.0.2-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
+[![Build Status](https://img.shields.io/badge/pub-v0.0.4-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
 Android 및 iOS에서 iamport를 사용하여 결제 할 때 사용하는 Flutter 플러그인입니다.
 
@@ -15,7 +15,7 @@ Android 및 iOS에서 iamport를 사용하여 결제 할 때 사용하는 Flutte
 
 ## Flutter 프로젝트
 
-pub의 설치 지침을 참조하십시오.
+pub의 [설치 지침을 참조하십시오.](https://pub.dartlang.org/packages/flutter_iamport#-installing-tab-)
 
 ## 설정(Android)
 Android에서 iamport 연동 모듈을 사용하려면 다음 항목을 설정해야합니다.
@@ -103,6 +103,54 @@ iOS에서 iamport 연동 모듈을 사용하려면 다음 3 가지 항목을 설
   <key>NSAllowsArbitraryLoads</key>
   <true/>
 </dict>
+```
+
+## model
+``` dart
+class Params {
+  String pg;
+  String pay_method;
+  bool escrow;
+  String merchant_uid;
+  String name;
+  int amount;
+  Object custom_data;
+  int tax_free;
+  int vat;
+  String currency;
+  String language;
+  String buyer_name;
+  String buyer_tel;
+  String buyer_email;
+  String buyer_addr;
+  String buyer_postcode;
+  String notice_url;
+  Display display;
+
+  bool digital;
+  String vbank_due;
+  String m_redirect_url;
+  String app_scheme;
+  String biz_num;
+
+  String customer_uid;
+  bool popup;
+  bool naverPopupMode;
+
+  static Map<String, dynamic> toMap(Params json) {
+    return {
+      'pay_method': json.pay_method,
+      'merchant_uid': json.merchant_uid,
+      'amount': json.amount,
+      ...
+  }
+
+  Params.fromJson(Map<String, dynamic> json) {
+    this.pay_method = json['pay_method'];
+    this.merchant_uid = json['merchant_uid'];
+    this.amount = json['amount'];
+    ...
+  }
 ```
 
 ## example

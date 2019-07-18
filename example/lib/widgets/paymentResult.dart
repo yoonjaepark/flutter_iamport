@@ -8,30 +8,58 @@ class PaymentResult extends StatelessWidget {
     ResultArguments args =
         new ResultArguments.fromJson(ModalRoute.of(context).settings.arguments);
 
-    return Container(
-        decoration: BoxDecoration(color: Colors.white),
-        child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Row(
+    return Scaffold(
+        body: Container(
+            decoration: BoxDecoration(color: Colors.white),
+            child: Center(
+                child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.only(bottom: 30),
+                        child: Text(
+                          '결제에 ${args.success ? "성공" : "실패"}하였습니다',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        )),
+                  ],
+                ),
                 Padding(
-                    padding: EdgeInsets.only(bottom: 30),
-                    child: Text(
-                      '결제에 ${args.success ? "성공" : "실패"}하였습니다',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
-                      ),
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                            flex: 4,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Text(
+                                '아임포트 번호',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          flex: 6,
+                          child: Text(
+                            args.impUid,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        )
+                      ],
                     )),
-              ],
-            ),
-            Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Expanded(
@@ -39,7 +67,7 @@ class PaymentResult extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text(
-                            '아임포트 번호',
+                            '에러메세지',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black87,
@@ -49,7 +77,7 @@ class PaymentResult extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        args.impUid,
+                        args.errorMsg,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black87,
@@ -57,48 +85,25 @@ class PaymentResult extends StatelessWidget {
                       ),
                     )
                   ],
-                )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                    flex: 4,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text(
-                        '에러메세지',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    )),
-                Expanded(
-                  flex: 6,
-                  child: Text(
-                    args.errorMsg,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
-                    ),
-                  ),
-                )
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FlatButton(
+                            color: Colors.blueAccent,
+                            child: Text(
+                              '홈',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(context, '/home');
+                            },
+                          )
+                        ]))
               ],
-            ),
-            Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      RaisedButton(
-                        child: Text('홈'),
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/home');
-                        },
-                      )
-                    ]))
-          ],
-        )));
+            ))));
   }
 }
 
