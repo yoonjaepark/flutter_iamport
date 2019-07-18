@@ -12,11 +12,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,22 +49,10 @@ public class IamportWebViewClient extends WebViewClient {
     this.channel = channel;
 
     HashMap<String, Object> arg = methodCall.argument("data");
-    try {
-      this.userCode = methodCall.argument("userCode");
-      data.put("pg", (String) arg.get("pg"));
 
-      data.put("pay_method", (String) arg.get("pay_method"));
-      data.put("merchant_uid", (String) arg.get("merchant_uid"));
-      data.put("amount", (String) arg.get("amount"));
-      data.put("name", (String) arg.get("name"));
-      data.put("buyer_name", (String) arg.get("buyer_name"));
-      data.put("buyer_email", (String) arg.get("buyer_email") );
-      data.put("buyer_tel", (String) arg.get("buyer_tel"));
-      data.put("app_scheme", (String) arg.get("app_scheme"));
+    this.data = toJsonFromMap(arg);
+    this.userCode = methodCall.argument("userCode");
 
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
     final HashMap<String, String> loadingParams = methodCall.argument("loading");
 
     this.loading  = new HashMap<String, String>() {{
@@ -75,7 +65,6 @@ public class IamportWebViewClient extends WebViewClient {
 
   @Override
   public boolean shouldOverrideUrlLoading(WebView view, String url) {
-    Log.i("shouldOverrideUrlLoading", url);
 
     if (isPaymentOver(url)) { // 결제시도가 종료된 후, 콜백이 설정되었으면, 리액트 네이티브로 event dispatch
       Uri uri = Uri.parse(url);
@@ -112,15 +101,9 @@ public class IamportWebViewClient extends WebViewClient {
   /* WebView가 load되면 IMP.init, IMP.request_pay를 호출한다 */
   @Override
   public void onPageFinished(WebView view, String url) {
-    Log.i("onPageFinished", data.toString());
-    Log.i("onPageFinished", url.toString());
 
     if (!loadingFinished && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 무한루프 방지
       setCustomLoadingPage(view);
-
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        Log.d("onPageFinished", Integer.toString( view.getSettings().getMixedContentMode()));
-      }
 
       view.evaluateJavascript("IMP.init('" + userCode + "');", null);
       view.evaluateJavascript("IMP.request_pay(" + data + ", " + triggerCallback + ");", null);
@@ -133,7 +116,6 @@ public class IamportWebViewClient extends WebViewClient {
   private void setCustomLoadingPage(WebView view) {
     String image =  this.loading.get("image");
     String message = this.loading.get("message");
-    Log.d("message", message);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       view.evaluateJavascript("document.getElementById('imp-rn-img').src = '" + image + "';", null);
     }
@@ -173,5 +155,52 @@ public class IamportWebViewClient extends WebViewClient {
   /* ActivityNotFoundException에서 market 실행여부 확인 */
   protected boolean isPaymentSchemeNotFound(String scheme) {
     return false;
+  }
+
+  private JSONObject toJsonFromMap(Map map) {
+    JSONObject result = new JSONObject();
+    Iterator<Map.Entry> it = map.entrySet().iterator();
+
+    while (it.hasNext()) {
+      Map.Entry entry = it.next();
+      String entryKey = entry.getKey().toString();
+      Log.d("toJsonFromMap0", entryKey);
+
+      if(String.class.isInstance(entry.getValue())) {
+        try {
+          result.put(entryKey, entry.getValue().toString());
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      } else if(Integer.class.isInstance(entry.getValue())) {
+        try {
+          result.put(entryKey, entry.getValue());
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      } else if(Map.class.isInstance(entry.getValue())) {
+        try {
+          result.put(entryKey, toJsonFromMap((Map<String, Object>) entry.getValue()));
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      }  else if(ArrayList.class.isInstance(entry.getValue())) {
+        try {
+          result.put(entryKey,toJsonFromArray((ArrayList) entry.getValue()));
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      }
+
+    }
+    return result;
+  }
+
+  private JSONArray toJsonFromArray (ArrayList list) {
+      JSONArray result = new JSONArray();
+      for (int i = 0; i < list.size(); i++) {
+        result.put(list.get(i));
+      }
+    return result;
   }
 }

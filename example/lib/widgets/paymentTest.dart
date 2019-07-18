@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_iamport/flutter_iamport.dart';
+import 'package:flutter_iamport/model/Params.dart';
+
 import '../utils/constants.dart';
 import '../utils/util.dart';
 
@@ -16,26 +17,20 @@ class _PaymentTestState extends State<PaymentTest> {
   int _pgMethodIndex = 0;
   int _quotasIndex = 0;
   bool pgPicker = false, payMethodPicker = false;
-
-  Map<String, dynamic> state = {
+  Params state = Params.fromJson({
     'pg': 'html5_inicis',
-    'payMethod': 'card',
+    'pay_method': 'card',
     'name': '아임포트 결제데이터 분석',
-    'merchantUid': 'mid_${DateTime.now().millisecondsSinceEpoch}',
+    'merchant_uid': 'mid_${DateTime.now().millisecondsSinceEpoch}',
     'app_scheme': 'example',
-    'amount': '39000',
-    'buyerName': '홍길동',
-    'buyerTel': '01012345678',
-    'buyerEmail': 'example@naver.com',
-    'buyerAddr': '서울시 강남구 신사동 661-16',
-    'buyerPostcode': '06018',
-    'cardQuota': 0,
-    'vbankDue': null,
-    'bizNum': null,
-    'digital': false,
-    'escrow': false,
-    'language': 'ko',
-  };
+    'amount': 39000,
+    'buyer_name': '홍길동',
+    'buyer_tel': '01012345678',
+    'buyer_email': 'example@naver.com',
+    'buyer_addr': '서울시 강남구 신사동 661-16',
+    'buyer_postcode': '06018',
+  });
+
   TextEditingController vbankDueCtr = TextEditingController();
   TextEditingController bizNumCtr = TextEditingController();
   TextEditingController nameCtr = TextEditingController();
@@ -50,75 +45,65 @@ class _PaymentTestState extends State<PaymentTest> {
   @override
   void initState() {
     super.initState();
-    this.nameCtr.text = this.state["name"];
-    this.amountCtr.text = this.state["amount"];
-    this.merchantUidCtr.text = this.state["merchantUid"];
-    this.buyerNameCtr.text = this.state["buyerName"];
-    this.buyerTelCtr.text = this.state["buyerTel"];
-    this.buyerEmailCtr.text = this.state["buyerEmail"];
+    this.nameCtr.text = this.state.name;
+    this.amountCtr.text = this.state.amount.toString();
+    this.merchantUidCtr.text = this.state.merchant_uid;
+    this.buyerNameCtr.text = this.state.buyer_name;
+    this.buyerTelCtr.text = this.state.buyer_tel;
+    this.buyerEmailCtr.text = this.state.buyer_email;
   }
 
   onPress() {
-    Map<String, dynamic> params = {
-      'pg': this.state['pg'],
-      'pay_method': this.state['payMethod'],
-      'name': this.nameCtr.text,
-      'merchant_uid': this.merchantUidCtr.text,
-      'app_scheme': this.state['app_scheme'],
-      'amount': this.amountCtr.text,
-      'buyer_name': this.buyerNameCtr.text,
-      'buyer_tel': this.buyerTelCtr.text,
-      'buyer_email': this.buyerEmailCtr.text,
-      'buyerAddr': '서울시 강남구 신사동 661-16',
-      // 'buyerPostcode': '06018',
-      // 'cardQuota': 0,
-      // 'vbankDue': null,
-      // 'bizNum': null,
-      // 'digital': false,
-      'escrow': this.state['escrow'],
-      'language': this.state['language'],
-    };
-
+    Params params = this.state;
     // 신용카드의 경우, 할부기한 추가
-    if (this.state['payMethod'] == 'card' && this.state['cardQuota'] != 0) {
-      params['display'] = {
-        'card_auota':
-            this.state['cardQuota'] == 1 ? [] : [this.state['cardQuota']]
-      };
+
+    params.name = nameCtr.text;
+    params.amount = int.parse(amountCtr.text);
+    params.merchant_uid = merchantUidCtr.text;
+    params.buyer_name = buyerNameCtr.text;
+    params.buyer_tel = buyerTelCtr.text;
+    params.buyer_email = buyerEmailCtr.text;
+
+    if (this.state.pay_method == 'card' &&
+        this.state.display.card_quota != null) {
+      params.display = new Display(this.state.display.card_quota[0] == 1
+          ? []
+          : this.state.display.card_quota);
     }
 
     // 가상계좌의 경우, 입금기한 추가
-    if (this.state['payMethod'] == 'vbank' && this.vbankDueCtr.text != null) {
-      params['vbank_due'] = this.vbankDueCtr.text;
+    if (this.state.pay_method == 'vbank' && this.vbankDueCtr.text != null) {
+      params.vbank_due = this.vbankDueCtr.text;
     }
 
     // 다날 && 가상계좌의 경우, 사업자 등록번호 10자리 추가
-    if (this.state['payMethod'] == 'vbank' &&
-        this.state['pg'] == 'danal_tpay') {
-      params['biz_num'] = this.state['bizNum'];
+    if (this.state.pay_method == 'vbank' && this.state.pg == 'danal_tpay') {
+      params.biz_num = this.state.biz_num;
     }
 
     // 휴대폰 소액결제의 경우, 실물 컨텐츠 여부 추가
-    if (this.state['payMethod'] == 'phone') {
-      params['digital'] = this.state['digital'];
+    if (this.state.pay_method == 'phone') {
+      params.digital = this.state.digital;
     }
 
     // 정기결제의 경우, customer_uid 추가
-    if (this.state['pg'] == 'kcp_billing') {
-      params['customer_uid'] = 'cuid_${DateTime.now().millisecondsSinceEpoch}';
+    if (this.state.pg == 'kcp_billing') {
+      params.customer_uid = 'cuid_${DateTime.now().millisecondsSinceEpoch}';
     }
 
     Navigator.pushNamed(
       context,
       "/payment",
-      arguments: (params),
+      arguments: params,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    var payMethod = this.state["payMethod"];
-    var pg = this.state["pg"];
+    // var payMethod = this.state["payMethod"];
+    var payMethod = this.state.pay_method;
+    // var pg = this.state["pg"];
+    var pg = this.state.pg;
     List<Row> child = [];
 
     child.add(Row(
@@ -140,8 +125,8 @@ class _PaymentTestState extends State<PaymentTest> {
                           await _asyncSimpleDialog(context, "Pg사", PGS);
                       List<Map<String, String>> methods = getMethods(pg);
                       setState(() {
-                        state["pg"] = pg["value"];
-                        state["payMethod"] = methods[0]["value"];
+                        this.state.pg = pg["value"];
+                        this.state.pay_method = methods[0]["value"];
                         _pgMethodIndex = 0;
                         _pgIndex = pg["index"];
                       });
@@ -172,15 +157,15 @@ class _PaymentTestState extends State<PaymentTest> {
                     onPressed: () async {
                       final Map<String, dynamic> methods =
                           await _asyncSimpleDialog(
-                              context, "Pg사", getMethods(this.state["pg"]));
+                              context, "Pg사", getMethods(this.state.pg));
                       setState(() {
                         _pgMethodIndex = methods["index"];
-                        state["payMethod"] = methods["value"];
+                        state.pay_method = methods["value"];
                       });
                     },
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(getMethods(this.state["pg"])
+                      child: Text(getMethods(this.state.pg)
                           .elementAt(this._pgMethodIndex)["label"]),
                     ))))
       ],
@@ -204,15 +189,17 @@ class _PaymentTestState extends State<PaymentTest> {
                       onPressed: () async {
                         final Map<String, dynamic> methods =
                             await _asyncSimpleDialog(
-                                context, "Pg사", getQuotas(this.state["pg"]));
+                                context, "Pg사", getQuotas(this.state.pg));
                         setState(() {
-                          this.state['cardQuota'] = methods['value'];
                           _quotasIndex = methods['index'];
+                          this.state.display.card_quota = [
+                            int.parse(methods['value'])
+                          ];
                         });
                       },
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(getQuotas(this.state['pg'])
+                        child: Text(getQuotas(this.state.pg)
                             .elementAt(this._quotasIndex)['label']),
                       ))))
         ],
@@ -276,10 +263,10 @@ class _PaymentTestState extends State<PaymentTest> {
                 style: TextStyle(color: Colors.black),
               )),
           Switch(
-            value: state["digital"],
+            value: this.state.digital,
             onChanged: (value) {
               setState(() {
-                state["digital"] = value;
+                this.state.digital = value;
               });
             },
           )
@@ -297,10 +284,10 @@ class _PaymentTestState extends State<PaymentTest> {
               style: TextStyle(color: Colors.black),
             )),
         Switch(
-          value: state["escrow"],
+          value: this.state.escrow,
           onChanged: (value) {
             setState(() {
-              state["escrow"] = value;
+              this.state.escrow = value;
             });
           },
         )

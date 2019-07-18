@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_iamport/model/Params.dart';
 
 class FlutterIamport {
   factory FlutterIamport() => _instance ??= FlutterIamport._();
@@ -44,7 +44,7 @@ class FlutterIamport {
   /// Listening url changed
   Stream<String> get onUrlChanged => _onUrlChanged.stream;
 
-  Future<Null> loadHTML(Object data, String userCode,
+  Future<Null> loadHTML(Params data, String userCode,
       Map<String, dynamic> loading, Rect rect, Function callback) async {
     launch(data, userCode, loading, rect, callback);
   }
@@ -73,8 +73,8 @@ class FlutterIamport {
     await _channel.invokeMethod('resize', args);
   }
 
-  Future<Null> launch(data, userCode, loading, rect, callback) async {
-    
+  Future<Null> launch(
+      Params data, String userCode, loading, rect, callback) async {
     await _channel.invokeMethod('showNativeView', <String, dynamic>{
       'rect': {
         'left': rect.left,
@@ -82,7 +82,7 @@ class FlutterIamport {
         'width': rect.width,
         'height': rect.height,
       },
-      'data': data,
+      'data': Params.toMap(data),
       'loading': loading,
       'userCode': userCode,
       'callback': callback.toString()

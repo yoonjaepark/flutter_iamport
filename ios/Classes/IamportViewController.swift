@@ -107,8 +107,6 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
         }
     }
     
-    
-    
     @available
     (iOS 8.0, *) func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if self.isUrlStartsWithAppScheme(uri: navigationAction.request.url!.absoluteString) {

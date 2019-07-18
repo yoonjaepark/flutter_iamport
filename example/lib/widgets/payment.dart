@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iamport/iamport_view.dart';
+import 'package:flutter_iamport/model/Params.dart';
 import '../utils/util.dart';
 
 
@@ -10,7 +11,7 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
-  var state;
+  Params state;
   var userCode;
   didChangeDependencies() async {
     setState(() {
@@ -24,7 +25,6 @@ class _PaymentState extends State<Payment> {
       'impUid': Uri.splitQueryString(url.toString())['imp_uid'],
       'errorMsg': Uri.splitQueryString(url.toString())['error_msg'],
     };
-    // print(Uri.base.queryParameters['imp_uid']);
     Navigator.pushReplacementNamed(context, '/PaymentResult', arguments: args);
   }
 
@@ -40,7 +40,7 @@ class _PaymentState extends State<Payment> {
           "image": 'https://raw.githubusercontent.com/iamport/iamport-react-native/master/src/img/iamport-logo.png' // 커스텀 로딩화면 이미지
         },
         param: this.state,
-        userCode: getUserCode(this.state['pg']),
+        userCode: getUserCode(this.state.pg),
         callback: this.callback);
   }
 }
