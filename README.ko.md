@@ -1,5 +1,5 @@
 # flutter_iamport
-[![Build Status](https://img.shields.io/badge/pub-v0.0.4-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
+[![Build Status](https://img.shields.io/badge/pub-v0.0.5-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
 Android 및 iOS에서 iamport를 사용하여 결제 할 때 사용하는 Flutter 플러그인입니다.
 

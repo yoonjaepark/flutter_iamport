@@ -1,3 +1,8 @@
+## 0.0.5
+
+* Example Mobile phone small payment Ui bug fix
+* swift optimization
+
 ## 0.0.4
 
 * ErrorOnParams View Fix, Readme Add Model
