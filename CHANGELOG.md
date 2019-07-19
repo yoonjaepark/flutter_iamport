@@ -1,3 +1,7 @@
+## 0.0.6
+
+* ios html resourc load fix
+
 ## 0.0.5
 
 * Example Mobile phone small payment Ui bug fix

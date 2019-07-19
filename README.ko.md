@@ -1,5 +1,5 @@
 # flutter_iamport
-[![Build Status](https://img.shields.io/badge/pub-v0.0.5-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
+[![Build Status](https://img.shields.io/badge/pub-v0.0.6-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
 Android 및 iOS에서 iamport를 사용하여 결제 할 때 사용하는 Flutter 플러그인입니다.
 
@@ -159,6 +159,7 @@ class Params {
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_iamport/iamport_view.dart'; // 아임포트 결제모듈을 불러옵니다.
+import 'package:flutter_iamport/model/Params.dart';
 
 class Payment extends StatelessWidget {
     callback(String url) { /* [필수입력] 결제 종료 후, 라우터를 변경하고 결과를 전달합니다. */

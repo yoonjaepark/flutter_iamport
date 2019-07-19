@@ -1,5 +1,5 @@
 # flutter_iamport
-[![Build Status](https://img.shields.io/badge/pub-v0.0.5-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
+[![Build Status](https://img.shields.io/badge/pub-v0.0.6-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
 A Flutter plugin for using the iamport for payment on Android and iOS.
 
@@ -158,6 +158,7 @@ class Params {
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_iamport/iamport_view.dart'; // Import iamport payment module.
+import 'package:flutter_iamport/model/Params.dart';
 
 class Payment extends StatelessWidget {
     callback(String url) { /* [Required] After the payment is finished, change the router and deliver the result. */
