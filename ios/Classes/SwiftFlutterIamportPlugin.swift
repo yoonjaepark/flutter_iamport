@@ -15,7 +15,7 @@ public class SwiftFlutterIamportPlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.iamportResult = result
         if call.method == "showNativeView" {
-            self.iamportView = IamportViewController()
+//            self.iamportView = IamportViewController()
             DispatchQueue.main.async {
                 guard let args = call.arguments else {
                     return
@@ -24,11 +24,10 @@ public class SwiftFlutterIamportPlugin: NSObject, FlutterPlugin {
                     let rect = params["rect"] as? Dictionary<String, Int>,
                     let userCode = params["userCode"] as? String,
                     let param = params["data"] as? [String: Any]{
-                 
-                    self.iamportView!.rect = self.parseRect(rect: rect)
-                    self.iamportView!.param = asString(jsonDictionary: param)
-                    self.iamportView!.userCode = userCode
-                    self.iamportView!.loadding = params["loading"] as! [String : String];
+                    self.iamportView = IamportViewController(userCode: userCode,
+                                                             rect: self.parseRect(rect: rect),
+                                                             param: asString(jsonDictionary: param),
+                                                             loadding: params["loading"] as! [String : String])
                 } else {
                 }
                 UIApplication.shared.keyWindow?.rootViewController?.view.addSubview(self.iamportView!.view);

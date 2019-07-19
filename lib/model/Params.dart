@@ -52,7 +52,6 @@ class Params {
       this.popup});
 
   static Map<String, dynamic> toMap(Params json) {
-
     return {
       'pay_method': json.pay_method,
       'merchant_uid': json.merchant_uid,
@@ -100,7 +99,7 @@ class Params {
     this.notice_url = json['notice_url'];
     this.tax_free = json['tax_free'];
     this.display = Display(json['display']);
-    this.digital = json['digital'];
+    this.digital = json['digital'] ?? false;
     this.vbank_due = json['vbank_due'];
     this.m_redirect_url = json['m_redirect_url'];
     this.app_scheme = json['app_scheme'];

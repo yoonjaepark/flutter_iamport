@@ -25,6 +25,15 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     var rect: CGRect!
     var userCode: String!
     
+    
+    convenience init(userCode: String, rect: CGRect, param: String, loadding: [String : String]) {
+        self.init()
+        self.userCode = userCode
+        self.rect = rect
+        self.loadding = loadding
+        self.param = param
+    }
+    
     override func loadView() {
         super.loadView()
         let frameSize = view.bounds.size
@@ -49,9 +58,10 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        let frameworkBundle = Bundle(for: FlutterIamportPlugin.self)
         let frameworkBundle = Bundle(for: FlutterIamportPlugin.self)
-
-        if let url = frameworkBundle.url(forResource: "www/payment", withExtension: "html") {
+        if let url = frameworkBundle.url(forResource: "payment", withExtension: "html") {
+//        if let url = Bundle.main.url(forResource: "payment", withExtension: "html") {
             let request = URLRequest(url: url)
 
             webView.load(request)
@@ -92,6 +102,7 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     
     @available(iOS 8.0, *)
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
+
         if (!loadingFinished) {
             let triggerCallback = ""
             webView.evaluateJavaScript("IMP.init('" + self.userCode! + "');")
