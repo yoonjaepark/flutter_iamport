@@ -58,23 +58,20 @@ class IamportViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let podBundle = Bundle(for: FlutterIamportPlugin.self.self)
-        if let url = podBundle.url(forResource: "html", withExtension: "bundle") {
+        let podBundle = Bundle(for: FlutterIamportPlugin.self)
+        
+        if let url = podBundle.url(forResource: "flutter_iamport", withExtension: "bundle") {
             let bundle = Bundle(url: url)
-            
-            if let url = bundle!.url(forResource: "www/payment", withExtension: "html") {
+
+            if let url = bundle!.url(forResource: "html", withExtension: "bundle") {
+                let bundle = Bundle(url: url)
+
+                if let url = bundle!.url(forResource: "www/payment", withExtension: "html") {
                 let request = URLRequest(url: url)
+
                 webView.load(request)
+                }
             }
-        }
-        
-        
-        let frameworkBundle = Bundle(for: FlutterIamportPlugin.self)
-        if let url = frameworkBundle.url(forResource: "payment", withExtension: "html") {
-
-            let request = URLRequest(url: url)
-
-            webView.load(request)
         }
     }
     
