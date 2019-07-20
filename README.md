@@ -1,5 +1,5 @@
 # flutter_iamport
-[![Build Status](https://img.shields.io/badge/pub-v0.0.6-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
+[![Build Status](https://img.shields.io/badge/pub-v0.0.7-success.svg)](https://travis-ci.org/roughike/flutter_iamport)
 
 A Flutter plugin for using the iamport for payment on Android and iOS.
 

@@ -1,6 +1,10 @@
+## 0.0.7
+
+* ios html pod spec fix
+
 ## 0.0.6
 
-* ios html resourc load fix
+* ios html resource bundle load fix
 
 ## 0.0.5
 
