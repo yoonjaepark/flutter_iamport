@@ -15,10 +15,7 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-#  s.resource_bundles = {'flutter_iamport' => ['*.bundle']}
-  s.resource_bundle = { 'flutter_iamport' => 'Pod/Resources/**/*.bundle' }
-  s.resource = 'Pod/Resources/**/*.bundle'
-  
+  s.resource_bundles = {'flutter_iamport' => ['*.bundle']}
   s.ios.deployment_target = '8.0'
 end
 
