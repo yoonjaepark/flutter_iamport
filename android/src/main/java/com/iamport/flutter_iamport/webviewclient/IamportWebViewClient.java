@@ -66,7 +66,7 @@ public class IamportWebViewClient extends WebViewClient {
   @Override
   public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-    if (isPaymentOver(url)) { // 결제시도가 종료된 후, 콜백이 설정되었으면, 리액트 네이티브로 event dispatch
+    if (isPaymentOver(url)) { // 결제시도가 종료된 후, 콜백이 설정되었으면, 메소드채널에 값 전달
       Uri uri = Uri.parse(url);
       this.channel.invokeMethod("onState", uri.getEncodedQuery());
       return false;
